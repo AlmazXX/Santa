@@ -16,3 +16,9 @@ export interface IParty {
   image?: string;
   creator: Types.ObjectId;
 }
+
+export interface IParticipant {
+  user: Types.ObjectId;
+  party: Types.ObjectId;
+  victim: Types.ObjectId;
+}

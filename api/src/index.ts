@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import config from './configs/config';
+import participantRouter from './routers/participants';
 import partyRouter from './routers/parties';
 import userRouter from './routers/users';
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.static('src/configs/public'));
 app.use('/users', userRouter);
 app.use('/parties', partyRouter);
+app.use('/participants', participantRouter);
 
 const run = async () => {
   mongoose.set('strictQuery', false);
