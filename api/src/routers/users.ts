@@ -22,7 +22,7 @@ userRouter.post('/', imageUpload.single('avatar'), async (req, res, next) => {
 
     user.generateToken();
     await user.save();
-    return res.send({ message: 'Registered successfully', user });
+    return res.send({ message: 'Registered successfully', result: user });
   } catch (e) {
     if (e instanceof Error.ValidationError) {
       return res.status(400).send(e);
@@ -73,7 +73,7 @@ userRouter.post('/google', async (req, res, next) => {
 
     user.generateToken();
     await user.save();
-    return res.send({ message: 'Login with Google successful', user });
+    return res.send({ message: 'Login with Google successful', result: user });
   } catch (e) {
     return next(e);
   }
@@ -95,7 +95,10 @@ userRouter.post('/sessions', async (req, res, next) => {
 
     user.generateToken();
     await user.save();
-    return res.send({ message: 'Username and password are correct!', user });
+    return res.send({
+      message: 'Username and password are correct!',
+      result: user,
+    });
   } catch (e) {
     return next(e);
   }
