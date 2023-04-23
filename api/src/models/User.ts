@@ -43,10 +43,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
       required: true,
     },
     lastName: String,
-    avatar: {
-      type: String,
-      required: true,
-    },
+    avatar: String,
     googleId: String,
   },
   { timestamps: true },
