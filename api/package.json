@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "seed": "ts-node src/fixtures.ts",
     "dev": "nodemon src/index.ts",
     "lint": "eslint \"src/**/*.ts\"",
     "format:check": "prettier --check .",
