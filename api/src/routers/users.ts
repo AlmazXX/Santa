@@ -15,8 +15,8 @@ userRouter.post('/', imageUpload.single('avatar'), async (req, res, next) => {
     const user = new User({
       email: req.body.email,
       password: req.body.password,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       avatar: req.file ? req.file.filename : null,
     });
 
@@ -47,8 +47,8 @@ userRouter.post('/google', async (req, res, next) => {
 
     const email = payload['email'];
     const googleId = payload['sub'];
-    const firstName = payload['given_name'];
-    const lastName = payload['family_name'];
+    const firstname = payload['given_name'];
+    const lastname = payload['family_name'];
     const avatarUrl = payload['picture'];
 
     if (!email) {
@@ -64,8 +64,8 @@ userRouter.post('/google', async (req, res, next) => {
       user = new User({
         email,
         password: randomUUID(),
-        firstName,
-        lastName,
+        firstname,
+        lastname,
         avatar,
         googleId,
       });

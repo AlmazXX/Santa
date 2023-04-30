@@ -27,7 +27,7 @@ const ParticipantSchema = new Schema<IParticipant>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       validate: {
-        validator: async (value: Types.ObjectId) => await Party.findById(value),
+        validator: async (value: Types.ObjectId) => await User.findById(value),
         message: 'User does not exist',
       },
     },

@@ -38,11 +38,11 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
       type: String,
       required: true,
     },
-    firstName: {
+    firstname: {
       type: String,
       required: true,
     },
-    lastName: String,
+    lastname: String,
     avatar: String,
     googleId: String,
   },

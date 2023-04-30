@@ -1,7 +1,9 @@
 import { Router } from 'express';
+import { Error, Types } from 'mongoose';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Participant from '../models/Participant';
 import Party from '../models/Party';
+import { IParticipant } from '../types';
 
 const participantRouter = Router();
 
@@ -19,6 +21,9 @@ participantRouter.post('/', auth, async (req, res, next) => {
 
     return res.send({ message: 'User joined the party', result: participant });
   } catch (error) {
+    if (error instanceof Error.ValidationError) {
+      return res.status(400).send(error);
+    }
     return next(error);
   }
 });
@@ -27,12 +32,19 @@ participantRouter.get('/', async (req, res, next) => {
   try {
     const limit: number = parseInt(req.query.limit as string) || 10;
     const page: number = parseInt(req.query.page as string) || 1;
+    const { user, party, victim } = req.query;
 
-    const totalParticipantCount = await Participant.count();
-    const totalPages = Math.ceil(totalParticipantCount);
+    const searchParam = Object.entries({ user, party, victim })
+      .filter(([_, value]) => value !== undefined)
+      .reduce<Partial<IParticipant>>((acc, [key, value]) => {
+        acc[key as keyof IParticipant] = new Types.ObjectId(value as string);
+        return acc;
+      }, {});
+
+    const totalCount = await Participant.count(searchParam);
     const skip = (page - 1) * limit;
 
-    const participants = await Participant.find()
+    const participants = await Participant.find(searchParam)
       .populate('user', 'email fisrtName lastName avatar')
       .populate('party', 'title image')
       .skip(skip)
@@ -40,7 +52,7 @@ participantRouter.get('/', async (req, res, next) => {
 
     return res.send({
       message: 'Participants are found',
-      result: { participants, currentPage: page, totalPages },
+      result: { participants, currentPage: page, totalCount },
     });
   } catch (error) {
     return next(error);
@@ -76,6 +88,9 @@ participantRouter.patch('/:party/gamble', auth, async (req, res, next) => {
 
     return res.send({ message: 'Matches prepared', result: participants });
   } catch (error) {
+    if (error instanceof Error.ValidationError) {
+      return res.status(400).send(error);
+    }
     return next(error);
   }
 });

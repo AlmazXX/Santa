@@ -1,9 +1,10 @@
 import { randomUUID } from 'crypto';
 import { Router } from 'express';
-import { Error } from 'mongoose';
+import { Error, Types } from 'mongoose';
 import { imageUpload } from '../configs/multer';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Party from '../models/Party';
+import { IParty } from '../types';
 
 const partyRouter = Router();
 
@@ -26,9 +27,8 @@ partyRouter.post(
     } catch (error) {
       if (error instanceof Error.ValidationError) {
         return res.status(400).send(error);
-      } else {
-        return next(error);
       }
+      return next(error);
     }
   },
 );
@@ -37,17 +37,28 @@ partyRouter.get('/', async (req, res, next) => {
   try {
     const limit: number = parseInt(req.query.limit as string) || 10;
     const page: number = parseInt(req.query.page as string) || 1;
+    const title = req.query.title as string;
+    const creator = req.query.creator as string;
 
-    const totalPartiesCount = await Party.count();
-    const totalPages = Math.ceil(totalPartiesCount);
+    const searchParam: Partial<Pick<IParty, 'creator'> & { title: RegExp }> =
+      {};
 
+    if (creator) {
+      searchParam.creator = new Types.ObjectId(creator);
+    }
+
+    if (title) {
+      searchParam.title = new RegExp(title, 'i');
+    }
+
+    const totalCount = await Party.count(searchParam);
     const skip = (page - 1) * limit;
 
-    const parties = await Party.find().skip(skip).limit(limit);
+    const parties = await Party.find(searchParam).skip(skip).limit(limit);
 
     return res.send({
       message: 'Parties are found',
-      result: { parties, currentPage: page, totalPages },
+      result: { parties, currentPage: page, totalCount },
     });
   } catch (error) {
     return next(error);
@@ -108,15 +119,15 @@ partyRouter.put(
     } catch (error) {
       if (error instanceof Error.ValidationError) {
         return res.status(400).send(error);
-      } else {
-        return next(error);
       }
+      return next(error);
     }
   },
 );
 
 partyRouter.delete('/:id', auth, async (req, res, next) => {
   try {
+    // Add deleting related participants
     const { user } = req as RequestWithUser;
     const partyId = req.params.id;
 

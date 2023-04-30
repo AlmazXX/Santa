@@ -4,8 +4,8 @@ export interface IUser {
   email: string;
   password: string;
   token: string;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   avatar?: string;
   googleId?: string;
 }
