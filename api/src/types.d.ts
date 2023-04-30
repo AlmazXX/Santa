@@ -22,3 +22,12 @@ export interface IParticipant {
   party: Types.ObjectId;
   victim: Types.ObjectId;
 }
+
+export interface IWishlist {
+  user: Types.ObjectId;
+  party: Types.ObjectId;
+  title: string;
+  address?: string;
+  image?: string;
+  description?: string;
+}

@@ -5,6 +5,7 @@ import config from './configs/config';
 import participantRouter from './routers/participants';
 import partyRouter from './routers/parties';
 import userRouter from './routers/users';
+import wishlistRouter from './routers/wishlists';
 
 const app = express();
 const port = 8000;
@@ -15,6 +16,7 @@ app.use(express.static('src/configs/public'));
 app.use('/users', userRouter);
 app.use('/parties', partyRouter);
 app.use('/participants', participantRouter);
+app.use('/wishlists', wishlistRouter);
 
 const run = async () => {
   mongoose.set('strictQuery', false);
