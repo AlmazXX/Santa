@@ -4,9 +4,7 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'prettier',
     'eslint:recommended',
-    'next/core-web-vitals',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'plugin:react-hooks/recommended',
