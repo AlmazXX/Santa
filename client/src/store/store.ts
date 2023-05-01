@@ -1,4 +1,4 @@
-import { usersReducer } from '@/dispatchers/usersSlice';
+import { usersReducer } from '@/dispatchers/user/usersSlice';
 import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({

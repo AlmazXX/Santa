@@ -1,8 +1,14 @@
-import React from 'react';
+import { selectLogout, selectUser } from '@/dispatchers/user/usersSlice';
+import { useAppSelector } from '@/store/hooks';
 import { AppBar, Grid, Toolbar, Typography } from '@mui/material';
 import Link from 'next/link';
+import AnonMenu from './AnonMenu';
+import UserMenu from './UserMenu';
 
 const AppToolbar = () => {
+  const user = useAppSelector(selectUser);
+  const logout = useAppSelector(selectLogout);
+
   return (
     <AppBar position="sticky" sx={{ mb: 2 }}>
       <Toolbar>
@@ -12,7 +18,9 @@ const AppToolbar = () => {
               Santa
             </Link>
           </Typography>
-          <Grid item></Grid>
+          <Grid item>
+            {user ? <UserMenu user={user} loggingOut={logout} /> : <AnonMenu />}
+          </Grid>
         </Grid>
       </Toolbar>
     </AppBar>
