@@ -1,11 +1,11 @@
 import { Card } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { PropsWithChildren, useCallback } from 'react';
+import React from 'react';
 import defaultCard from '../../../assets/images/defaultCard.jpg';
 import style from './Card.module.css';
 
-interface Props extends PropsWithChildren {
+interface Props extends React.PropsWithChildren {
   image?: string | null;
   link?: string;
 }
@@ -14,9 +14,12 @@ const PartyItem: React.FC<Props> = ({ image, link, children }) => {
   const router = useRouter();
   const existingLink = link ? link : undefined;
 
-  const onClick = useCallback((link: string) => {
-    router.push(link);
-  }, []);
+  const onClick = React.useCallback(
+    (link: string) => {
+      router.push(link);
+    },
+    [router],
+  );
 
   return (
     <Card

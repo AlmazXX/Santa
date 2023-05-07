@@ -12,7 +12,7 @@ const Parties = () => {
 
   React.useEffect(() => {
     dispatch(getParties());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Grid container spacing={1}>

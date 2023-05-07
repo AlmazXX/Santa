@@ -4,6 +4,7 @@ import { AppBar, Grid, Toolbar, Typography } from '@mui/material';
 import Link from 'next/link';
 import AnonMenu from './AnonMenu';
 import UserMenu from './UserMenu';
+import React from 'react';
 
 const AppToolbar = () => {
   const user = useAppSelector(selectUser);
