@@ -1,0 +1,25 @@
+.card {
+  width: min(100vw, 300px);
+  padding: 0 0 33.33% 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.card__image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, #fff, transparent);
+}
