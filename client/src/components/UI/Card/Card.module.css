@@ -1,8 +1,14 @@
 .card {
   width: min(100vw, 300px);
-  padding: 0 0 33.33% 0;
+  padding: 0;
+  padding-bottom: calc(100% / 3);
   position: relative;
   overflow: hidden;
+  transition: transform 50ms ease-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
 }
 
 .card__image {
