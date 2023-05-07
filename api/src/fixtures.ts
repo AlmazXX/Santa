@@ -50,6 +50,7 @@ const run = async () => {
     title: 'Frozen',
     inviteUrl: randomUUID(),
     creator: Anna._id,
+    image: 'fixtures/frozen.jpeg',
   });
 
   await Participant.create(
