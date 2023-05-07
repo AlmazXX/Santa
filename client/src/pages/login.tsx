@@ -101,7 +101,7 @@ const Login = () => {
                   autoComplete="current-email"
                   value={state.email}
                   onChange={onChange}
-                  // required
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -112,7 +112,7 @@ const Login = () => {
                   autoComplete="current-password"
                   value={state.password}
                   onChange={onChange}
-                  // required
+                  required
                 />
               </Grid>
             </Grid>
