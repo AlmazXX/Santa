@@ -1,9 +1,11 @@
+import { partiesReducer } from '@/dispatchers/party/partiesSlice';
 import { usersReducer } from '@/dispatchers/user/usersSlice';
 import { configureStore } from '@reduxjs/toolkit';
 
 export const store = configureStore({
   reducer: {
     users: usersReducer,
+    parties: partiesReducer,
   },
 });
 

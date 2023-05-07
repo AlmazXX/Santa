@@ -34,7 +34,7 @@ export interface GlobalError {
 }
 
 export interface IPagination<Type> {
-  [key: string]: Type;
+  [key: string]: Type[];
   currentPage: number;
   totalCount: number;
 }
@@ -42,4 +42,13 @@ export interface IPagination<Type> {
 export interface ApiResponse<Type> {
   message: string;
   result: Type | IPagination<Type>;
+}
+
+export interface ApiParty {
+  _id: string;
+  title: string;
+  image: string | null;
+  creator: string;
+  createdAt: string;
+  updatedAt: string;
 }
