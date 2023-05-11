@@ -1,18 +1,11 @@
 import AddButton from '@/components/UI/AddButton/AddButton';
 import { selectParties } from '@/dispatchers/party/partiesSlice';
-import { getParties } from '@/dispatchers/party/partiesThunk';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { Grid, Typography } from '@mui/material';
-import React from 'react';
 import PartyItem from './components/PartyItem';
 
 const Parties = () => {
-  const dispatch = useAppDispatch();
   const parties = useAppSelector(selectParties);
-
-  React.useEffect(() => {
-    dispatch(getParties());
-  }, [dispatch]);
 
   return (
     <Grid container spacing={1}>

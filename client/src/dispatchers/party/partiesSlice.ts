@@ -1,6 +1,7 @@
 import { RootState } from '@/store/store';
 import { ApiParty } from '@/types';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 import { getParties } from './partiesThunk';
 
 interface InitialParties {
@@ -16,9 +17,17 @@ const initialState: InitialParties = {
 const partiesSlice = createSlice({
   name: 'parties',
   initialState,
-  reducers: {},
-  extraReducers(builder) {
+  reducers: {
+    setParties: (state, action: PayloadAction<ApiParty[]>) => {
+      state.items = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
     builder
+      .addCase(HYDRATE, (_, action) => {
+        // @ts-expect-error
+        return action.payload.parties;
+      })
       .addCase(getParties.pending, (state) => {
         state.loading = true;
       })
@@ -33,5 +42,6 @@ const partiesSlice = createSlice({
 });
 
 export const partiesReducer = partiesSlice.reducer;
+export const { setParties } = partiesSlice.actions;
 export const selectParties = (state: RootState) => state.parties.items;
 export const selectPartiesLoading = (state: RootState) => state.parties.loading;
