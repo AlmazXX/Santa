@@ -15,14 +15,11 @@ const PartyItem: React.FC<Props> = ({ party }) => {
   return (
     <Card image={partyImage} link={partyLink}>
       <Grid
-        item
         container
         direction="column"
         justifyContent="center"
         zIndex={1}
         position="relative"
-        width="100%"
-        height="100%"
         p={2}
       >
         <Grid item>

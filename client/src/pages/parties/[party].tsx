@@ -1,19 +1,20 @@
-import { selectParticipants } from '@/dispatchers/participant/participantsSlice';
+import Layout from '@/components/UI/Layout/Layout';
 import { getParticipants } from '@/dispatchers/participant/participantsThunk';
-import { useAppSelector } from '@/store/hooks';
+import Participants from '@/features/Participant/Participants';
 import { wrapper } from '@/store/store';
+import { Grid } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import React from 'react';
 
-const singleParty = () => {
-  const participants = useAppSelector(selectParticipants);
-
+const singleParty: React.FC = () => {
   return (
-    <div>
-      {participants.map((participant) => (
-        <p key={participant._id}>{participant._id}</p>
-      ))}
-    </div>
+    <Layout>
+      <Grid container>
+        <Grid item>
+          <Participants />
+        </Grid>
+      </Grid>
+    </Layout>
   );
 };
 
