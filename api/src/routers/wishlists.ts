@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { Error, Types } from 'mongoose';
+import { Error } from 'mongoose';
 import { imageUpload } from '../configs/multer';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Wishlist from '../models/Wishlist';
-import { IWishlist } from '../types';
+import { IWishlist, PageLimit, switchToString } from '../types';
 
+type SearchParam = Partial<
+  switchToString<Pick<IWishlist, 'party' | 'user'>> & PageLimit
+>;
 const wishlistRouter = Router();
 
 wishlistRouter.post(
@@ -36,30 +39,19 @@ wishlistRouter.post(
 
 wishlistRouter.get('/', async (req, res, next) => {
   try {
-    const limit: number = parseInt(req.query.limit as string) || 10;
-    const page: number = parseInt(req.query.page as string) || 1;
-    const { party, user } = req.query;
+    const { page, limit, ...params }: SearchParam = req.query;
+    const p = page ? parseInt(page) : 1;
+    const l = limit ? parseInt(limit) : 10;
 
-    const searchParam = Object.entries({ party, user })
-      .filter(([_, value]) => value !== undefined)
-      .reduce<Partial<Pick<IWishlist, 'party' | 'user'>>>(
-        (acc, [key, value]) => {
-          acc[key as keyof Pick<IWishlist, 'party' | 'user'>] =
-            new Types.ObjectId(value as string);
-          return acc;
-        },
-        {},
-      );
+    const totalCount = await Wishlist.count(params);
+    const skip = (p - 1) * l;
 
-    const totalCount = await Wishlist.count(searchParam);
-    const skip = (page - 1) * limit;
-
-    const wishlist = await Wishlist.find(searchParam).skip(skip).limit(limit);
+    const wishlist = await Wishlist.find(params).skip(skip).limit(l);
 
     res.send({
       message: 'Wishlist is found',
       result: wishlist,
-      currentPage: page,
+      currentPage: p,
       totalCount,
     });
   } catch (error) {

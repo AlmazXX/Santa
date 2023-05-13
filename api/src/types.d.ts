@@ -31,3 +31,12 @@ export interface IWishlist {
   image?: string;
   description?: string;
 }
+
+type switchToString<T> = {
+  [P in keyof T]: string;
+};
+
+interface PageLimit {
+  page: string;
+  limit: string;
+}

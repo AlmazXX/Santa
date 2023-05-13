@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { Error, Types } from 'mongoose';
+import { Error } from 'mongoose';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Participant from '../models/Participant';
 import Party from '../models/Party';
-import { IParticipant } from '../types';
+import { IParticipant, PageLimit, switchToString } from '../types';
+
+type SearchParam = Partial<switchToString<IParticipant> & PageLimit>;
 
 const participantRouter = Router();
 
@@ -30,29 +32,22 @@ participantRouter.post('/', auth, async (req, res, next) => {
 
 participantRouter.get('/', async (req, res, next) => {
   try {
-    const limit: number = parseInt(req.query.limit as string) || 10;
-    const page: number = parseInt(req.query.page as string) || 1;
-    const { user, party, victim } = req.query;
+    const { page, limit, ...params }: SearchParam = req.query;
+    const p = page ? parseInt(page) : 1;
+    const l = limit ? parseInt(limit) : 10;
 
-    const searchParam = Object.entries({ user, party, victim })
-      .filter(([_, value]) => value !== undefined)
-      .reduce<Partial<IParticipant>>((acc, [key, value]) => {
-        acc[key as keyof IParticipant] = new Types.ObjectId(value as string);
-        return acc;
-      }, {});
+    const totalCount = await Participant.count(params);
+    const skip = (p - 1) * l;
 
-    const totalCount = await Participant.count(searchParam);
-    const skip = (page - 1) * limit;
-
-    const participants = await Participant.find(searchParam)
+    const participants = await Participant.find(params)
       .populate('user', 'email firstname lastname avatar')
       .populate('party', 'title creator image')
       .skip(skip)
-      .limit(limit);
+      .limit(l);
 
     return res.send({
       message: 'Participants are found',
-      result: { participants, currentPage: page, totalCount },
+      result: { participants, currentPage: p, totalCount },
     });
   } catch (error) {
     return next(error);

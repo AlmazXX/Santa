@@ -1,10 +1,14 @@
 import { randomUUID } from 'crypto';
 import { Router } from 'express';
-import { Error, Types } from 'mongoose';
+import { Error } from 'mongoose';
 import { imageUpload } from '../configs/multer';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Party from '../models/Party';
-import { IParty } from '../types';
+import { IParty, PageLimit, switchToString } from '../types';
+
+type SearchParam = Partial<
+  switchToString<Pick<IParty, 'title' | 'creator'>> & PageLimit
+>;
 
 const partyRouter = Router();
 
@@ -35,30 +39,18 @@ partyRouter.post(
 
 partyRouter.get('/', async (req, res, next) => {
   try {
-    const limit: number = parseInt(req.query.limit as string) || 10;
-    const page: number = parseInt(req.query.page as string) || 1;
-    const title = req.query.title as string;
-    const creator = req.query.creator as string;
+    const { page, limit, ...params }: SearchParam = req.query;
+    const p = page ? parseInt(page) : 1;
+    const l = limit ? parseInt(limit) : 10;
 
-    const searchParam: Partial<Pick<IParty, 'creator'> & { title: RegExp }> =
-      {};
+    const totalCount = await Party.count(params);
+    const skip = (p - 1) * l;
 
-    if (creator) {
-      searchParam.creator = new Types.ObjectId(creator);
-    }
-
-    if (title) {
-      searchParam.title = new RegExp(title, 'i');
-    }
-
-    const totalCount = await Party.count(searchParam);
-    const skip = (page - 1) * limit;
-
-    const parties = await Party.find(searchParam).skip(skip).limit(limit);
+    const parties = await Party.find(params).skip(skip).limit(l);
 
     return res.send({
       message: 'Parties are found',
-      result: { parties, currentPage: page, totalCount },
+      result: { parties, currentPage: p, totalCount },
     });
   } catch (error) {
     return next(error);
