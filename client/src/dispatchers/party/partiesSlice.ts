@@ -31,9 +31,9 @@ const partiesSlice = createSlice({
       .addCase(getParties.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getParties.fulfilled, (state, { payload: parties }) => {
+      .addCase(getParties.fulfilled, (state, { payload: result }) => {
         state.loading = false;
-        state.items = parties.parties;
+        state.items = result.parties;
       })
       .addCase(getParties.rejected, (state) => {
         state.loading = false;
