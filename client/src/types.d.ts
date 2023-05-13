@@ -52,3 +52,8 @@ export interface ApiParty {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IParty {
+  title: string;
+  image: File | null;
+}

@@ -1,27 +1,27 @@
 import { RootState } from '@/store/store';
-import { ApiParty } from '@/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ApiParty, GlobalError, ValidationError } from '@/types';
+import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { getParties } from './partiesThunk';
+import { createParty, getParties } from './partiesThunk';
 
 interface InitialParties {
-  loading: boolean;
   items: ApiParty[];
+  loading: boolean;
+  submitting: boolean;
+  error: ValidationError | GlobalError | null;
 }
 
 const initialState: InitialParties = {
-  loading: false,
   items: [],
+  loading: false,
+  submitting: false,
+  error: null,
 };
 
 const partiesSlice = createSlice({
   name: 'parties',
   initialState,
-  reducers: {
-    setParties: (state, action: PayloadAction<ApiParty[]>) => {
-      state.items = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(HYDRATE, (_, action) => {
@@ -37,11 +37,27 @@ const partiesSlice = createSlice({
       })
       .addCase(getParties.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(createParty.pending, (state) => {
+        state.error = null;
+        state.submitting = true;
+      })
+      .addCase(createParty.fulfilled, (state) => {
+        state.error = null;
+        state.submitting = false;
+      })
+      .addCase(createParty.rejected, (state, { payload: error }) => {
+        state.submitting = false;
+        console.log(error);
+
+        state.error = error || null;
       });
   },
 });
 
 export const partiesReducer = partiesSlice.reducer;
-export const { setParties } = partiesSlice.actions;
 export const selectParties = (state: RootState) => state.parties.items;
 export const selectPartiesLoading = (state: RootState) => state.parties.loading;
+export const selectPartiesSubmitting = (state: RootState) =>
+  state.parties.submitting;
+export const selectPartiesError = (state: RootState) => state.parties.error;
