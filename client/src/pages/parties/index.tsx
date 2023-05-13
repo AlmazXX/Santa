@@ -3,8 +3,9 @@ import { getParties } from '@/dispatchers/party/partiesThunk';
 import Parties from '@/features/Party/Parties';
 import { wrapper } from '@/store/store';
 import { GetServerSideProps } from 'next';
+import React from 'react';
 
-const index = () => {
+const index: React.FC = () => {
   return (
     <Layout>
       <Parties />

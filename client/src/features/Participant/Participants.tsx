@@ -4,9 +4,10 @@ import {
 } from '@/dispatchers/participant/participantsSlice';
 import { useAppSelector } from '@/store/hooks';
 import { Grid, Typography } from '@mui/material';
+import React from 'react';
 import ParticipantItem from './components/ParticipantItem';
 
-const Participants = () => {
+const Participants: React.FC = () => {
   const participants = useAppSelector(selectParticipants);
   const currentParticipant = useAppSelector(selectParticipant);
 

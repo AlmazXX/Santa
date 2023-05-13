@@ -1,5 +1,5 @@
 import axiosApi from '@/axiosApi';
-import { AppDispatch, RootState, RootStore } from '@/store/store';
+import { AppDispatch, RootState } from '@/store/store';
 import { ApiParticipant, ApiResponse, IPagination } from '@/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setParticipant } from './participantsSlice';

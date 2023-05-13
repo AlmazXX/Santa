@@ -7,8 +7,9 @@ import { GlobalError, IParty } from '@/types';
 import { Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import { enqueueSnackbar } from 'notistack';
+import React from 'react';
 
-const PartyCreate = () => {
+const PartyCreate: React.FC = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectPartiesError) as GlobalError;
   const router = useRouter();
@@ -26,7 +27,9 @@ const PartyCreate = () => {
           : error.error;
         enqueueSnackbar(errorMessage, { variant: 'error' });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

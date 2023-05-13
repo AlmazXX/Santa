@@ -28,8 +28,8 @@ const participantsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(HYDRATE, (state, action) => {
-        // @ts-expect-error
+      .addCase(HYDRATE, (_, action) => {
+        // @ts-expect-error hydrate's action payload is not typed
         return action.payload.participants;
       })
       .addCase(getParticipants.pending, (state) => {

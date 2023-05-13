@@ -1,7 +1,5 @@
 import Card from '@/components/UI/Card/Card';
 import { apiURL } from '@/constants';
-import { selectUser } from '@/dispatchers/user/usersSlice';
-import { useAppSelector } from '@/store/hooks';
 import { ApiParticipant } from '@/types';
 import { Grid, Typography } from '@mui/material';
 import React from 'react';

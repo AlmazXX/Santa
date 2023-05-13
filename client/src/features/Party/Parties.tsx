@@ -2,9 +2,10 @@ import AddButton from '@/components/UI/AddButton/AddButton';
 import { selectParties } from '@/dispatchers/party/partiesSlice';
 import { useAppSelector } from '@/store/hooks';
 import { Grid, Typography } from '@mui/material';
+import React from 'react';
 import PartyItem from './components/PartyItem';
 
-const Parties = () => {
+const Parties: React.FC = () => {
   const parties = useAppSelector(selectParties);
 
   return (

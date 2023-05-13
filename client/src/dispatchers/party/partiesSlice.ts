@@ -25,7 +25,7 @@ const partiesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(HYDRATE, (_, action) => {
-        // @ts-expect-error
+        // @ts-expect-error hydrate's action payload is not typed
         return action.payload.parties;
       })
       .addCase(getParties.pending, (state) => {
