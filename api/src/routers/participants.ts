@@ -45,8 +45,8 @@ participantRouter.get('/', async (req, res, next) => {
     const skip = (page - 1) * limit;
 
     const participants = await Participant.find(searchParam)
-      .populate('user', 'email fisrtName lastName avatar')
-      .populate('party', 'title image')
+      .populate('user', 'email firstname lastname avatar')
+      .populate('party', 'title creator image')
       .skip(skip)
       .limit(limit);
 
@@ -73,9 +73,9 @@ participantRouter.patch('/:party/gamble', auth, async (req, res, next) => {
     }
 
     const participants = await Participant.find({ party: partyId })
-      .populate('user', 'email fisrtName lastName avatar')
+      .populate('user', 'email firstname lastname avatar')
       .populate('party', 'title image')
-      .populate('victim', 'email fisrtName lastName avatar');
+      .populate('victim', 'email firstname lastname avatar');
 
     participants.sort(() => Math.random() - 0.5);
     const n = participants.length;
