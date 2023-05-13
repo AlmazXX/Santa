@@ -57,22 +57,18 @@ const run = async () => {
     {
       user: Hans._id,
       party: frozen._id,
-      victim: Kristoff._id,
     },
     {
       user: Kristoff._id,
       party: frozen._id,
-      victim: Anna._id,
     },
     {
       user: Anna._id,
       party: frozen._id,
-      victim: Sven._id,
     },
     {
       user: Sven._id,
       party: frozen._id,
-      victim: Hans._id,
     },
   );
 
