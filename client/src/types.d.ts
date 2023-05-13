@@ -57,3 +57,12 @@ export interface IParty {
   title: string;
   image: File | null;
 }
+
+export interface ApiParticipant {
+  _id: string;
+  user: Omit<User, 'token'>;
+  party: Pick<ApiParty, '_id' | 'title' | 'image'>;
+  victim: string;
+  createdAt: string;
+  updatedAt: string;
+}

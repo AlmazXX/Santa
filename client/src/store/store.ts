@@ -1,3 +1,4 @@
+import { participantsReducer } from '@/dispatchers/participant/participantsSlice';
 import { partiesReducer } from '@/dispatchers/party/partiesSlice';
 import { usersReducer } from '@/dispatchers/user/usersSlice';
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
@@ -8,6 +9,7 @@ const makeStore = () =>
     reducer: {
       users: usersReducer,
       parties: partiesReducer,
+      participants: participantsReducer,
     },
     devTools: true,
   });
