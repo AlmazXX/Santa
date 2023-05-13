@@ -10,16 +10,13 @@ interface Props extends React.PropsWithChildren {
   link?: string;
 }
 
-const PartyItem: React.FC<Props> = ({ image, link, children }) => {
+const CutsomCard: React.FC<Props> = ({ image, link, children }) => {
   const router = useRouter();
   const existingLink = link ? link : undefined;
 
-  const onClick = React.useCallback(
-    (link: string) => {
-      router.push(link);
-    },
-    [router],
-  );
+  const onClick = (link: string) => {
+    router.push(link);
+  };
 
   return (
     <Card
@@ -41,4 +38,4 @@ const PartyItem: React.FC<Props> = ({ image, link, children }) => {
   );
 };
 
-export default PartyItem;
+export default CutsomCard;
