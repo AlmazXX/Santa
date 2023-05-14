@@ -1,6 +1,7 @@
 import Layout from '@/components/UI/Layout/Layout';
 import { getParticipants } from '@/dispatchers/participant/participantsThunk';
 import Participants from '@/features/Participant/Participants';
+import WishlistBar from '@/features/Wishlist/WishlistBar';
 import { wrapper } from '@/store/store';
 import { Grid } from '@mui/material';
 import { GetServerSideProps } from 'next';
@@ -14,6 +15,7 @@ const singleParty: React.FC = () => {
           <Participants />
         </Grid>
       </Grid>
+      <WishlistBar />
     </Layout>
   );
 };

@@ -1,6 +1,7 @@
 import { participantsReducer } from '@/dispatchers/participant/participantsSlice';
 import { partiesReducer } from '@/dispatchers/party/partiesSlice';
 import { usersReducer } from '@/dispatchers/user/usersSlice';
+import { wishlistsReducer } from '@/dispatchers/wishlist/wishlistsSlice';
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 
@@ -10,6 +11,7 @@ const makeStore = () =>
       users: usersReducer,
       parties: partiesReducer,
       participants: participantsReducer,
+      wishlists: wishlistsReducer,
     },
     devTools: true,
   });
