@@ -66,3 +66,11 @@ export interface ApiParticipant {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IWishlist {
+  party: string;
+  title: string;
+  address?: string;
+  image?: File | null;
+  description?: string;
+}
