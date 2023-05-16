@@ -1,18 +1,16 @@
 import axiosApi from '@/axiosApi';
 import { AppDispatch, RootState } from '@/store/store';
-import { ApiParticipant, ApiResponse, IPagination } from '@/types';
+import { ApiParticipant, ApiResponse, IPagination, SearchParam } from '@/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setParticipant } from './participantsSlice';
 
-interface SearchParam {
-  user?: ApiParticipant['user']['_id'];
-  party?: ApiParticipant['party']['_id'];
-  victim?: ApiParticipant['victim'];
-}
+type ParticipantsQuery = SearchParam<
+  Pick<ApiParticipant, 'user' | 'party' | 'victim'>
+>;
 
 export const getParticipants = createAsyncThunk<
   IPagination<ApiParticipant>,
-  SearchParam,
+  ParticipantsQuery,
   { state: RootState; dispatch: AppDispatch }
 >('participants/get', async (params, { getState, dispatch }) => {
   const { data } = await axiosApi.get<ApiResponse<ApiParticipant>>(
