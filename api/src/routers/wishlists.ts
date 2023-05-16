@@ -50,9 +50,7 @@ wishlistRouter.get('/', async (req, res, next) => {
 
     res.send({
       message: 'Wishlist is found',
-      result: wishlist,
-      currentPage: p,
-      totalCount,
+      result: { wishlist, currentPage: p, totalCount },
     });
   } catch (error) {
     return next(error);
