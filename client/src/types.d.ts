@@ -74,3 +74,23 @@ export interface IWishlist {
   image?: File | null;
   description?: string;
 }
+
+export interface ApiWishlist {
+  _id: string;
+  party: string;
+  title: string;
+  address: string;
+  image: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PageLimit {
+  page?: number;
+  limit?: number;
+}
+
+type SearchParam<T> = {
+  [P in keyof T]?: string | { $regex?: string; $options?: string };
+} & PageLimit;

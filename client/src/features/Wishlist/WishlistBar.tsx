@@ -1,6 +1,7 @@
 import {
   closeDrawer,
   openForm,
+  selectWishlist,
   selectWishlistFormIsOpen,
   selectWishlistIsOpen,
 } from '@/dispatchers/wishlist/wishlistsSlice';
@@ -8,14 +9,19 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import CloseIcon from '@mui/icons-material/Close';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { Button, Drawer, Grid, IconButton, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 import React from 'react';
+import WishItem from './components/WishItem';
 import WishlistForm from './components/WishlistForm';
 import style from './WishlistBar.module.css';
 
 const WishlistBar: React.FC = () => {
   const dispatch = useAppDispatch();
+  const wishlist = useAppSelector(selectWishlist);
   const isWishlistOpen = useAppSelector(selectWishlistIsOpen);
   const isFormOpen = useAppSelector(selectWishlistFormIsOpen);
+  const router = useRouter();
+  const { party } = router.query as { party: string };
 
   return (
     <Drawer
@@ -65,8 +71,15 @@ const WishlistBar: React.FC = () => {
             </Button>
           </Grid>
           <Grid item display={isFormOpen ? 'block' : 'none'}>
-            <WishlistForm />
+            <WishlistForm party={party} />
           </Grid>
+        </Grid>
+        <Grid item container direction="column" alignItems="center" spacing={2}>
+          {wishlist.map((wishItem) => (
+            <Grid item key={wishItem._id}>
+              <WishItem wishItem={wishItem} />
+            </Grid>
+          ))}
         </Grid>
       </Grid>
     </Drawer>
