@@ -25,24 +25,28 @@ const run = async () => {
       password: '123',
       token: randomUUID(),
       firstname: 'Hans',
+      avatar: 'fixtures/Hans.png',
     },
     {
       email: 'kristoff@gmail.com',
       password: '123',
       token: randomUUID(),
       firstname: 'Kristoff',
+      avatar: 'fixtures/Kristoff.png',
     },
     {
       email: 'anna@gmail.com',
       password: '123',
       token: randomUUID(),
       firstname: 'Anna',
+      avatar: 'fixtures/Anna.png',
     },
     {
       email: 'sven@gmail.com',
       password: '123',
       token: randomUUID(),
       firstname: 'Sven',
+      avatar: 'fixtures/Swen.png',
     },
   );
 
@@ -77,41 +81,49 @@ const run = async () => {
       user: Hans._id,
       party: frozen._id,
       title: 'Kingdom',
+      image: 'fixtures/Arendelle.webp',
     },
     {
       user: Hans._id,
       party: frozen._id,
       title: 'Fewer brothers',
+      image: 'fixtures/brothers.jpg',
     },
     {
       user: Kristoff._id,
       party: frozen._id,
       title: 'Sleigh',
+      image: 'fixtures/sleigh.webp',
     },
     {
       user: Kristoff._id,
       party: frozen._id,
       title: 'Ice',
+      image: 'fixtures/Ice.webp',
     },
     {
       user: Anna._id,
       party: frozen._id,
       title: 'Sister',
+      image: 'fixtures/sister.webp',
     },
     {
       user: Anna._id,
       party: frozen._id,
       title: 'Sweet cake',
+      image: 'fixtures/cake.jpg',
     },
     {
       user: Sven._id,
       party: frozen._id,
       title: 'Carrot',
+      image: 'fixtures/carrot.jpg',
     },
     {
       user: Sven._id,
       party: frozen._id,
-      title: 'Salt',
+      title: 'Song',
+      image: 'fixtures/song.webp',
     },
   );
 
