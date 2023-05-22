@@ -1,3 +1,4 @@
+import { addInterceptors } from '@/axiosApi';
 import { GOOGLE_CLIENT_ID } from '@/constants';
 import { getMe } from '@/dispatchers/user/usersThunk';
 import { wrapper } from '@/store/store';
@@ -12,6 +13,7 @@ import { Provider } from 'react-redux';
 
 const App = ({ Component, ...rest }: AppProps) => {
   const { store, props } = wrapper.useWrappedStore(rest);
+  addInterceptors(store);
 
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
