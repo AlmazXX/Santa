@@ -5,6 +5,7 @@ import { Error } from 'mongoose';
 import config from '../configs/config';
 import { imageUpload } from '../configs/multer';
 import downloadFile from '../helpers/downloadImg';
+import auth, { RequestWithUser } from '../middlewares/auth';
 import User from '../models/User';
 
 const userRouter = Router();
@@ -124,6 +125,20 @@ userRouter.delete('/sessions', async (req, res, next) => {
     return res.send(success);
   } catch (e) {
     return next(e);
+  }
+});
+
+userRouter.get('/me', auth, async (req, res, next) => {
+  try {
+    const { user } = <RequestWithUser>req;
+    console.log(user);
+
+    return res.send({
+      message: 'User found',
+      result: user,
+    });
+  } catch (error) {
+    return next();
   }
 });
 
