@@ -1,7 +1,8 @@
 import { RootState } from '@/store/store';
 import { GlobalError, User, ValidationError } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
-import { googleLogin, login, logout, register } from './usersThunk';
+import { HYDRATE } from 'next-redux-wrapper';
+import { getMe, googleLogin, login, logout, register } from './usersThunk';
 
 interface UsersState {
   user: User | null;
@@ -35,6 +36,10 @@ export const usersSlice = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(HYDRATE, (_, action) => {
+        //@ts-expect-error hydrate's action payload is not typed
+        return action.payload.users;
+      })
       .addCase(register.pending, (state) => {
         state.registerError = null;
         state.registerLoading = true;
@@ -85,6 +90,16 @@ export const usersSlice = createSlice({
       })
       .addCase(logout.rejected, (state) => {
         state.logout = false;
+      })
+      .addCase(getMe.pending, (state) => {
+        state.loginLoading = true;
+      })
+      .addCase(getMe.fulfilled, (state, { payload: user }) => {
+        state.loginLoading = false;
+        state.user = user;
+      })
+      .addCase(getMe.rejected, (state) => {
+        state.loginLoading = false;
       });
   },
 });

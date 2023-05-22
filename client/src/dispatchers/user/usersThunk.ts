@@ -9,6 +9,7 @@ import {
 } from '@/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
+import { destroyCookie, setCookie } from 'nookies';
 import { unsetUser } from './usersSlice';
 
 export const register = createAsyncThunk<
@@ -28,7 +29,14 @@ export const register = createAsyncThunk<
     });
 
     const { data } = await axiosApi.post<ApiResponse<User>>('/users', formData);
-    return data.result as User;
+    const result = <User>data.result;
+
+    setCookie(null, 'token', result.token, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
+
+    return result;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {
       return rejectWithValue(e.response.data as ValidationError);
@@ -47,7 +55,14 @@ export const login = createAsyncThunk<
       '/users/sessions',
       user,
     );
-    return data.result as User;
+    const result = <User>data.result;
+
+    setCookie(null, 'token', result.token, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
+
+    return result;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {
       return rejectWithValue(e.response.data as GlobalError);
@@ -65,7 +80,14 @@ export const googleLogin = createAsyncThunk<
     const { data } = await axiosApi.post<ApiResponse<User>>('/users/google', {
       credential,
     });
-    return data.result as User;
+    const result = <User>data.result;
+
+    setCookie(null, 'token', result.token, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
+
+    return result;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {
       return rejectWithValue(e.response.data as GlobalError);
@@ -78,6 +100,25 @@ export const logout = createAsyncThunk(
   'users/logout',
   async (_, { dispatch }) => {
     await axiosApi.delete('/users/sessions');
+    destroyCookie(null, 'token');
     dispatch(unsetUser());
+  },
+);
+
+export const getMe = createAsyncThunk(
+  'users/getSelf',
+  async (token: string) => {
+    const { data } = await axiosApi.get<ApiResponse<User>>('/users/me', {
+      headers: { Authorization: token },
+    });
+
+    const result = <User>data.result;
+
+    setCookie(null, 'token', result.token, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
+
+    return result;
   },
 );
