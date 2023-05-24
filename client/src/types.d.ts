@@ -77,6 +77,7 @@ export interface IWishlist {
 
 export interface ApiWishlist {
   _id: string;
+  user: string;
   party: string;
   title: string;
   address: string;
