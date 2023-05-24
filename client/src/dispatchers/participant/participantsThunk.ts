@@ -1,7 +1,15 @@
 import axiosApi from '@/axiosApi';
 import { AppDispatch, RootState } from '@/store/store';
-import { ApiParticipant, ApiResponse, IPagination, SearchParam } from '@/types';
+import {
+  ApiParticipant,
+  ApiResponse,
+  IPagination,
+  IParticipant,
+  SearchParam,
+  ValidationError,
+} from '@/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { isAxiosError } from 'axios';
 import { setCurrentParticipant } from './participantsSlice';
 
 type ParticipantsQuery = SearchParam<
@@ -29,4 +37,23 @@ export const getParticipants = createAsyncThunk<
   }
 
   return result;
+});
+
+export const joinParty = createAsyncThunk<
+  void,
+  IParticipant,
+  { rejectValue: ValidationError }
+>('participants/join', async (participant, { rejectWithValue }) => {
+  try {
+    await axiosApi.post('/participants', participant);
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response &&
+      [400, 401, 403, 404].includes(error.response.status)
+    ) {
+      return rejectWithValue(error.response.data as ValidationError);
+    }
+    throw error;
+  }
 });

@@ -2,19 +2,19 @@ import { RootState } from '@/store/store';
 import { ApiParticipant } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { getParticipants } from './participantsThunk';
+import { getParticipants, joinParty } from './participantsThunk';
 
 interface InitialParticipants {
   items: ApiParticipant[];
   loading: boolean;
-  submitting: boolean;
+  joining: boolean;
   currentParticipant: ApiParticipant | null;
 }
 
 const initialState: InitialParticipants = {
   items: [],
   loading: false,
-  submitting: false,
+  joining: false,
   currentParticipant: null,
 };
 
@@ -44,6 +44,15 @@ const participantsSlice = createSlice({
       })
       .addCase(getParticipants.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(joinParty.pending, (state) => {
+        state.joining = true;
+      })
+      .addCase(joinParty.fulfilled, (state) => {
+        state.joining = false;
+      })
+      .addCase(joinParty.rejected, (state) => {
+        state.joining = false;
       });
   },
 });
@@ -54,7 +63,7 @@ export const selectParticipants = (state: RootState) =>
   state.participants.items;
 export const selectParticipantsLoading = (state: RootState) =>
   state.participants.loading;
-export const selectParticipantsSubmitting = (state: RootState) =>
-  state.participants.submitting;
+export const selectParticipantJoining = (state: RootState) =>
+  state.participants.joining;
 export const selectCurrentParticipant = (state: RootState) =>
   state.participants.currentParticipant;

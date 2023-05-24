@@ -60,11 +60,16 @@ export interface IParty {
 
 export interface ApiParticipant {
   _id: string;
-  user: Omit<User, 'token'>;
+  user: Omit<ApiUser, 'token'>;
   party: Pick<ApiParty, '_id' | 'title' | 'image'>;
   victim: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface IParticipant {
+  user: string;
+  party: string;
 }
 
 export interface IWishlist {
