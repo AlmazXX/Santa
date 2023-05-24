@@ -13,7 +13,7 @@ const Parties: React.FC = () => {
       <Grid item>
         <Typography>Parties</Typography>
       </Grid>
-      <Grid item container direction="row" alignItems="center" spacing={2}>
+      <Grid item container direction="row" alignItems="stretch" spacing={2}>
         <Grid item>
           <AddButton link="parties/create" />
         </Grid>
