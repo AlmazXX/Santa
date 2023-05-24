@@ -19,7 +19,14 @@ const App = ({ Component, ...rest }: AppProps) => {
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+          <SnackbarProvider
+            maxSnack={3}
+            autoHideDuration={4000}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+          >
             <Component {...props.pageProps} />
           </SnackbarProvider>
         </ThemeProvider>
