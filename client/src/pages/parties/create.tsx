@@ -1,6 +1,8 @@
+import ProtectedRoute from '@/components/ProtectedRoute/ProtectedRoute';
 import Layout from '@/components/UI/Layout/Layout';
 import { selectPartiesError } from '@/dispatchers/party/partiesSlice';
 import { createParty } from '@/dispatchers/party/partiesThunk';
+import { selectUser } from '@/dispatchers/user/usersSlice';
 import PartyForm from '@/features/Party/components/PartyForm';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { GlobalError, IParty } from '@/types';
@@ -11,6 +13,7 @@ import React from 'react';
 
 const PartyCreate: React.FC = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const error = useAppSelector(selectPartiesError) as GlobalError;
   const router = useRouter();
 
@@ -33,16 +36,18 @@ const PartyCreate: React.FC = () => {
   };
 
   return (
-    <Layout>
-      <Grid container direction="column" spacing={1}>
-        <Grid item>
-          <Typography>Create party</Typography>
+    <ProtectedRoute isAllowed={Boolean(user)}>
+      <Layout>
+        <Grid container direction="column" spacing={1}>
+          <Grid item>
+            <Typography>Create party</Typography>
+          </Grid>
+          <Grid item>
+            <PartyForm onSubmit={onSubmit} />
+          </Grid>
         </Grid>
-        <Grid item>
-          <PartyForm onSubmit={onSubmit} />
-        </Grid>
-      </Grid>
-    </Layout>
+      </Layout>
+    </ProtectedRoute>
   );
 };
 
