@@ -8,22 +8,25 @@ interface InitialParticipants {
   items: ApiParticipant[];
   loading: boolean;
   submitting: boolean;
-  participant: ApiParticipant | null;
+  currentParticipant: ApiParticipant | null;
 }
 
 const initialState: InitialParticipants = {
   items: [],
   loading: false,
   submitting: false,
-  participant: null,
+  currentParticipant: null,
 };
 
 const participantsSlice = createSlice({
   name: 'participants',
   initialState,
   reducers: {
-    setParticipant: (state, { payload }: PayloadAction<ApiParticipant>) => {
-      state.participant = payload;
+    setCurrentParticipant: (
+      state,
+      { payload }: PayloadAction<ApiParticipant>,
+    ) => {
+      state.currentParticipant = payload;
     },
   },
   extraReducers: (builder) => {
@@ -46,12 +49,12 @@ const participantsSlice = createSlice({
 });
 
 export const participantsReducer = participantsSlice.reducer;
-export const { setParticipant } = participantsSlice.actions;
+export const { setCurrentParticipant } = participantsSlice.actions;
 export const selectParticipants = (state: RootState) =>
   state.participants.items;
 export const selectParticipantsLoading = (state: RootState) =>
   state.participants.loading;
 export const selectParticipantsSubmitting = (state: RootState) =>
   state.participants.submitting;
-export const selectParticipant = (state: RootState) =>
-  state.participants.participant;
+export const selectCurrentParticipant = (state: RootState) =>
+  state.participants.currentParticipant;

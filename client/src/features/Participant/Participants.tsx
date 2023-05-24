@@ -1,5 +1,5 @@
 import {
-  selectParticipant,
+  selectCurrentParticipant,
   selectParticipants,
 } from '@/dispatchers/participant/participantsSlice';
 import { useAppSelector } from '@/store/hooks';
@@ -9,7 +9,7 @@ import ParticipantItem from './components/ParticipantItem';
 
 const Participants: React.FC = () => {
   const participants = useAppSelector(selectParticipants);
-  const currentParticipant = useAppSelector(selectParticipant);
+  const currentParticipant = useAppSelector(selectCurrentParticipant);
 
   return (
     <Grid container spacing={1}>
