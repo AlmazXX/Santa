@@ -50,7 +50,7 @@ const Login = () => {
     try {
       await dispatch(login(state)).unwrap();
       setState(initialState);
-      router.push('/');
+      router.back();
     } catch (e) {
       console.error();
     }
@@ -58,7 +58,7 @@ const Login = () => {
 
   const onGoogleLogin = async (credentials: string) => {
     await dispatch(googleLogin(credentials)).unwrap();
-    router.push('/');
+    router.back();
   };
 
   return (

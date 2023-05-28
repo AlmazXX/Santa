@@ -62,7 +62,7 @@ const Register = () => {
     try {
       await dispatch(register(state)).unwrap();
       setState(initialState);
-      router.push('/');
+      router.back();
     } catch (e) {
       console.error;
     }
@@ -70,7 +70,7 @@ const Register = () => {
 
   const onGoogleLogin = async (credentials: string) => {
     await dispatch(googleLogin(credentials)).unwrap();
-    router.push('/');
+    router.back();
   };
 
   const getFieldError = (fieldName: string) => {
