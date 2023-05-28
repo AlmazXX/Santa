@@ -1,6 +1,6 @@
 import { RootState } from '@/store/store';
 import { ApiParticipant } from '@/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { getParticipants, joinParty } from './participantsThunk';
 
@@ -8,27 +8,18 @@ interface InitialParticipants {
   items: ApiParticipant[];
   loading: boolean;
   joining: boolean;
-  currentParticipant: ApiParticipant | null;
 }
 
 const initialState: InitialParticipants = {
   items: [],
   loading: false,
   joining: false,
-  currentParticipant: null,
 };
 
 const participantsSlice = createSlice({
   name: 'participants',
   initialState,
-  reducers: {
-    setCurrentParticipant: (
-      state,
-      { payload }: PayloadAction<ApiParticipant>,
-    ) => {
-      state.currentParticipant = payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(HYDRATE, (_, action) => {
@@ -58,12 +49,9 @@ const participantsSlice = createSlice({
 });
 
 export const participantsReducer = participantsSlice.reducer;
-export const { setCurrentParticipant } = participantsSlice.actions;
 export const selectParticipants = (state: RootState) =>
   state.participants.items;
 export const selectParticipantsLoading = (state: RootState) =>
   state.participants.loading;
 export const selectParticipantJoining = (state: RootState) =>
   state.participants.joining;
-export const selectCurrentParticipant = (state: RootState) =>
-  state.participants.currentParticipant;

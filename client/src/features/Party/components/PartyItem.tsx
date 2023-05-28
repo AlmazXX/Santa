@@ -1,8 +1,8 @@
 import Card from '@/components/UI/Card/Card';
 import { apiURL } from '@/constants';
 import {
-  selectCurrentParticipant,
   selectParticipantJoining,
+  selectParticipants,
 } from '@/dispatchers/participant/participantsSlice';
 import { useAppSelector } from '@/store/hooks';
 import { ApiParty } from '@/types';
@@ -16,13 +16,14 @@ interface Props {
 
 const PartyItem: React.FC<Props> = ({ party }) => {
   const join = useJoin(party._id);
-  const participant = useAppSelector(selectCurrentParticipant);
+  const userParties = useAppSelector(selectParticipants);
   const joining = useAppSelector(selectParticipantJoining);
   const partyImage = party.image && apiURL + '/' + party.image;
   const partyLink = `parties/${party._id}`;
 
-  // Need to revise checking if user's in party since when many parties joined, join btn is invisible only in one party
-  const isUserInParty = participant?.party._id === party._id;
+  const isUserInParty = userParties
+    .map((party) => party.party._id)
+    .includes(party._id);
 
   const onJoin = (e: React.MouseEvent) => {
     e.stopPropagation();

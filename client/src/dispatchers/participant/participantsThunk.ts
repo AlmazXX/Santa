@@ -10,7 +10,6 @@ import {
 } from '@/types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
-import { setCurrentParticipant } from './participantsSlice';
 
 type ParticipantsQuery = SearchParam<
   Pick<ApiParticipant, 'user' | 'party' | 'victim'>
@@ -20,21 +19,12 @@ export const getParticipants = createAsyncThunk<
   IPagination<ApiParticipant>,
   ParticipantsQuery,
   { state: RootState; dispatch: AppDispatch }
->('participants/get', async (params, { getState, dispatch }) => {
+>('participants/get', async (params) => {
   const { data } = await axiosApi.get<ApiResponse<ApiParticipant>>(
     '/participants',
     { params },
   );
-  const { result } = data as { result: IPagination<ApiParticipant> };
-  const { user } = getState().users;
-
-  if (user) {
-    const participant = result.participants.find(
-      (participant) => participant.user._id === user._id,
-    );
-
-    participant && dispatch(setCurrentParticipant(participant));
-  }
+  const { result } = <{ result: IPagination<ApiParticipant> }>data;
 
   return result;
 });
