@@ -3,10 +3,12 @@ import { selectUser } from '@/dispatchers/user/usersSlice';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { IParticipant } from '@/types';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 
 const useJoin = (party: string) => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const [state, setState] = useState<IParticipant>({ user: '', party });
@@ -33,6 +35,7 @@ const useJoin = (party: string) => {
 
   return () => {
     dispatch(joinParty(state));
+    router.push('/parties/' + party);
   };
 };
 
