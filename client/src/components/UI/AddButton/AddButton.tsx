@@ -1,20 +1,15 @@
+import AddIcon from '@mui/icons-material/Add';
 import { IconButton } from '@mui/material';
 import React from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import Link from 'next/link';
 import style from './AddButton.module.css';
 
 interface Props {
-  link?: string;
+  onClick?: () => void;
 }
 
-const AddButton: React.FC<Props> = ({ link }) => {
+const AddButton: React.FC<Props> = ({ onClick }) => {
   return (
-    <IconButton
-      component={Link}
-      href={link ? link : ''}
-      className={style.button}
-    >
+    <IconButton onClick={onClick} className={style.button}>
       <AddIcon className={style.button__icon} />
     </IconButton>
   );
