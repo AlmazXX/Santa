@@ -18,6 +18,7 @@ wishlistRouter.post(
     try {
       const wishlistItem = await Wishlist.create({
         party: req.body.party,
+        user: req.body.user,
         title: req.body.title,
         address: req.body.address,
         image: req.file ? req.file.filename : null,

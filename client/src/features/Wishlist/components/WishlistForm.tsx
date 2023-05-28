@@ -1,6 +1,11 @@
 import FileUpload from '@/components/UI/FileUpload/FileUpload';
+import { selectUser } from '@/dispatchers/user/usersSlice';
 import { closeForm } from '@/dispatchers/wishlist/wishlistsSlice';
-import { useAppDispatch } from '@/store/hooks';
+import {
+  addWishItem,
+  getWishlist,
+} from '@/dispatchers/wishlist/wishlistsThunk';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { IWishlist } from '@/types';
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
@@ -11,8 +16,10 @@ interface Props {
 
 const WishlistForm: React.FC<Props> = ({ party }) => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const [state, setState] = React.useState<IWishlist>({
     party,
+    user: user!._id,
     title: '',
     address: '',
     image: null,
@@ -22,7 +29,6 @@ const WishlistForm: React.FC<Props> = ({ party }) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState((prev) => ({ ...prev, [name]: value }));
-    console.log(state);
   };
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +39,11 @@ const WishlistForm: React.FC<Props> = ({ party }) => {
     }));
   };
 
-  const onFormSubmit = (e: React.FormEvent) => {
+  const onFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    await dispatch(addWishItem(state));
     dispatch(closeForm());
+    dispatch(getWishlist({ user: user?._id, party }));
   };
 
   return (

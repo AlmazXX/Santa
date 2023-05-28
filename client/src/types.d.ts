@@ -74,6 +74,7 @@ export interface IParticipant {
 
 export interface IWishlist {
   party: string;
+  user: string;
   title: string;
   address?: string;
   image?: File | null;
