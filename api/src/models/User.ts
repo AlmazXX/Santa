@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 import { IUser } from '../types';
 
 const SALT_WORK_FACTOR = 10;
@@ -72,6 +73,10 @@ UserSchema.methods.checkPassword = function (password) {
 UserSchema.methods.generateToken = function () {
   this.token = randomUUID();
 };
+
+UserSchema.plugin(uniqueValidator, {
+  message: 'Value {VALUE} already exist in path {PATH}',
+});
 
 const User = model<IUser, UserModel>('User', UserSchema);
 export default User;

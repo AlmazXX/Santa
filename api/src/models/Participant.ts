@@ -1,4 +1,5 @@
 import { model, Schema, Types } from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 import { IParticipant } from '../types';
 import Party from './Party';
 import User from './User';
@@ -36,6 +37,10 @@ const ParticipantSchema = new Schema<IParticipant>(
 );
 
 ParticipantSchema.index({ user: 1, party: 1 }, { unique: true });
+
+ParticipantSchema.plugin(uniqueValidator, {
+  message: 'Value {VALUE} already exist in path {PATH}',
+});
 
 const Participant = model<IParticipant>('Participant', ParticipantSchema);
 export default Participant;
