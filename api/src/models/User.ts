@@ -16,7 +16,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
   {
     email: {
       type: String,
-      required: true,
+      required: [true, 'Email is required'],
       unique: true,
       validate: {
         validator: async function (
@@ -32,7 +32,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Password is required'],
     },
     token: {
       type: String,
@@ -40,7 +40,7 @@ const UserSchema = new Schema<IUser, UserModel, IUserMethods>(
     },
     firstname: {
       type: String,
-      required: true,
+      required: [true, 'First name is required'],
     },
     lastname: String,
     avatar: String,

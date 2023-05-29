@@ -8,7 +8,7 @@ const WishlistSchema = new Schema<IWishlist>(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'User_id is required'],
       validate: {
         validator: async (value: Types.ObjectId) => await User.findById(value),
         message: 'User does not exist',
@@ -17,7 +17,7 @@ const WishlistSchema = new Schema<IWishlist>(
     party: {
       type: Schema.Types.ObjectId,
       ref: 'Party',
-      required: true,
+      required: [true, 'Party_id is required'],
       validate: {
         validator: async (value: Types.ObjectId) => await Party.findById(value),
         message: 'Party does not exist',
@@ -25,7 +25,7 @@ const WishlistSchema = new Schema<IWishlist>(
     },
     title: {
       type: String,
-      required: true,
+      required: [true, 'Title is required'],
     },
     address: String,
     image: String,

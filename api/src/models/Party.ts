@@ -6,12 +6,12 @@ const PartySchema = new Schema<IParty>(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, 'Title is required'],
     },
     creator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, "Creator's user_id is required"],
       validate: {
         validator: async (value: Types.ObjectId) => await User.findById(value),
         message: 'User does not exist',

@@ -131,7 +131,6 @@ userRouter.delete('/sessions', async (req, res, next) => {
 userRouter.get('/me', auth, async (req, res, next) => {
   try {
     const { user } = <RequestWithUser>req;
-    console.log(user);
 
     return res.send({
       message: 'User found',

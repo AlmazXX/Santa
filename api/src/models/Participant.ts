@@ -8,7 +8,7 @@ const ParticipantSchema = new Schema<IParticipant>(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'User_id is required'],
       validate: {
         validator: async (value: Types.ObjectId) => await User.findById(value),
         message: 'User does not exist',
@@ -17,7 +17,7 @@ const ParticipantSchema = new Schema<IParticipant>(
     party: {
       type: Schema.Types.ObjectId,
       ref: 'Party',
-      required: true,
+      required: [true, 'Party_id is required'],
       validate: {
         validator: async (value: Types.ObjectId) => await Party.findById(value),
         message: 'Party does not exist',
@@ -34,6 +34,8 @@ const ParticipantSchema = new Schema<IParticipant>(
   },
   { timestamps: true },
 );
+
+ParticipantSchema.index({ user: 1, party: 1 }, { unique: true });
 
 const Participant = model<IParticipant>('Participant', ParticipantSchema);
 export default Participant;
