@@ -12,10 +12,10 @@ const run = async () => {
   const db = mongoose.connection;
 
   try {
-    await db.dropCollection('users');
-    await db.dropCollection('parties');
-    await db.dropCollection('participants');
-    await db.dropCollection('wishlists');
+    await db.collection('users').deleteMany({});
+    await db.collection('parties').deleteMany({});
+    await db.collection('participants').deleteMany({});
+    await db.collection('wishlists').deleteMany({});
   } catch {
     console.log('Collections were not present, skipping drop...');
   }
