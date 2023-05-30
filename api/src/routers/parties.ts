@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { Error } from 'mongoose';
 import { imageUpload } from '../configs/multer';
 import auth, { RequestWithUser } from '../middlewares/auth';
+import Participant from '../models/Participant';
 import Party from '../models/Party';
 import { IParty, PageLimit, switchToString } from '../types';
 
@@ -25,6 +26,11 @@ partyRouter.post(
         creator: user._id,
         image: req.file ? req.file.filename : null,
         inviteUrl: randomUUID(),
+      });
+
+      await Participant.create({
+        party: party._id,
+        user: user._id,
       });
 
       return res.send({ message: 'Party is created', result: party });
@@ -57,10 +63,11 @@ partyRouter.get('/', async (req, res, next) => {
   }
 });
 
-partyRouter.get('/:invite', async (req, res, next) => {
+partyRouter.get('/:id', async (req, res, next) => {
   try {
-    const inviteUrl = req.params.invite as string;
-    const party = await Party.findOne({ inviteUrl });
+    const partyId = <string>req.params.id;
+
+    const party = await Party.findById(partyId);
 
     if (!party) {
       return res.status(404).send({ error: 'Party is not found' });
