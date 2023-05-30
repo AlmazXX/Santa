@@ -126,7 +126,6 @@ partyRouter.put(
 
 partyRouter.delete('/:id', auth, async (req, res, next) => {
   try {
-    // Add deleting related participants
     const { user } = req as RequestWithUser;
     const partyId = req.params.id;
 
@@ -147,6 +146,10 @@ partyRouter.delete('/:id', auth, async (req, res, next) => {
     }
 
     const deletedParty = await Party.findByIdAndDelete(partyId);
+
+    if (deletedParty) {
+      await Participant.deleteMany({ party: deletedParty._id });
+    }
 
     return res.send({ message: 'Party is deleted', result: deletedParty });
   } catch (error) {

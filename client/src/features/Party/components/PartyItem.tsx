@@ -4,20 +4,24 @@ import {
   selectParticipantJoining,
   selectParticipants,
 } from '@/dispatchers/participant/participantsSlice';
-import { useAppSelector } from '@/store/hooks';
+import { deleteParty, getParties } from '@/dispatchers/party/partiesThunk';
+import { selectUser } from '@/dispatchers/user/usersSlice';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ApiParty } from '@/types';
 import { Button, Grid, Typography } from '@mui/material';
 import React from 'react';
 import useJoin from '../hooks/useJoin';
 
 interface Props {
-  party: Pick<ApiParty, '_id' | 'title' | 'image'>;
+  party: Pick<ApiParty, '_id' | 'title' | 'creator' | 'image'>;
 }
 
 const PartyItem: React.FC<Props> = ({ party }) => {
-  const join = useJoin(party._id);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
   const userParties = useAppSelector(selectParticipants);
   const joining = useAppSelector(selectParticipantJoining);
+  const join = useJoin(party._id);
   const partyImage = party.image && apiURL + '/' + party.image;
   const partyLink = `parties/${party._id}`;
 
@@ -25,13 +29,22 @@ const PartyItem: React.FC<Props> = ({ party }) => {
     .map((party) => party.party._id)
     .includes(party._id);
 
-  const onJoin = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const onJoin = () => {
     join();
   };
 
+  const onDelete = async () => {
+    await dispatch(deleteParty(party._id));
+    dispatch(getParties());
+  };
+
+  const cardActions =
+    user?._id === party.creator
+      ? [{ action: onDelete, title: 'Delete' }]
+      : undefined;
+
   return (
-    <Card image={partyImage} link={partyLink}>
+    <Card image={partyImage} link={partyLink} actions={cardActions}>
       <Grid
         container
         direction="column"

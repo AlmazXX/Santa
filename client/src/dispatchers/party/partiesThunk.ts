@@ -59,3 +59,10 @@ export const getSingleParty = createAsyncThunk<ApiParty, string>(
     return <ApiParty>data.result;
   },
 );
+
+export const deleteParty = createAsyncThunk(
+  'parties/delete',
+  async (id: string) => {
+    await axiosApi.delete(`/parties/${id}`);
+  },
+);
