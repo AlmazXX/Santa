@@ -54,7 +54,7 @@ participantRouter.get('/', async (req, res, next) => {
   }
 });
 
-participantRouter.patch('/:party/gamble', auth, async (req, res, next) => {
+participantRouter.post('/:party/gamble', auth, async (req, res, next) => {
   try {
     const { user } = req as RequestWithUser;
     const partyId = req.params.party;
@@ -80,6 +80,12 @@ participantRouter.patch('/:party/gamble', auth, async (req, res, next) => {
       santa.victim = participants[(i + 1) % n].user;
       santa.save();
     }
+
+    await Party.findByIdAndUpdate(
+      partyId,
+      { gambled: true },
+      { new: true, runValidators: true },
+    );
 
     return res.send({ message: 'Matches prepared', result: participants });
   } catch (error) {
