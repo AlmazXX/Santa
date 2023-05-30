@@ -1,4 +1,6 @@
-import { Card } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Card, Menu, MenuItem } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -8,20 +10,49 @@ import style from './Card.module.css';
 interface Props extends React.PropsWithChildren {
   image?: string | null;
   link?: string;
+  actions?: {
+    action: () => void;
+    title: string;
+  }[];
 }
 
-const CutsomCard: React.FC<Props> = ({ image, link, children }) => {
+const CutsomCard: React.FC<Props> = ({ image, link, actions, children }) => {
   const router = useRouter();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
   const existingLink = link ? link : undefined;
+
+  const onOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const onClose = () => {
+    setAnchorEl(null);
+  };
 
   const onClick = (link: string) => {
     router.push(link);
   };
 
+  const menu =
+    actions && actions.length ? (
+      <>
+        <IconButton className={style.card__toggle} onClick={onOpen}>
+          <MoreVertIcon />
+        </IconButton>
+        <Menu anchorEl={anchorEl} open={isOpen} onClose={onClose}>
+          {actions.map((action) => (
+            <MenuItem key={action.title} onClick={action.action}>
+              {action.title}
+            </MenuItem>
+          ))}
+        </Menu>
+      </>
+    ) : null;
+
   return (
     <Card
       className={style.card}
-      onClick={existingLink ? () => onClick(existingLink) : undefined}
       style={existingLink ? { cursor: 'pointer' } : {}}
     >
       {children}
@@ -33,7 +64,11 @@ const CutsomCard: React.FC<Props> = ({ image, link, children }) => {
         sizes="100%"
         priority
       />
-      <div className={style.background} />
+      <div
+        className={style.card__background}
+        onClick={existingLink ? () => onClick(existingLink) : undefined}
+      />
+      {menu}
     </Card>
   );
 };
