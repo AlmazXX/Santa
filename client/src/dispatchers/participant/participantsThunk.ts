@@ -47,3 +47,22 @@ export const joinParty = createAsyncThunk<
     throw error;
   }
 });
+
+export const gambleParticipants = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: ValidationError }
+>('participants/gamble', async (id, { rejectWithValue }) => {
+  try {
+    await axiosApi.post(`participants/${id}/gamble`);
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response &&
+      [400, 401, 403, 404].includes(error.response.status)
+    ) {
+      return rejectWithValue(error.response.data as ValidationError);
+    }
+    throw error;
+  }
+});
