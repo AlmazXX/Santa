@@ -22,6 +22,10 @@ const PartySchema = new Schema<IParty>(
       required: true,
     },
     image: String,
+    gambled: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

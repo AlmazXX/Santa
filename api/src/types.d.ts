@@ -14,6 +14,7 @@ export interface IParty {
   title: string;
   inviteUrl: string;
   image?: string;
+  gambled?: boolean;
   creator: Types.ObjectId;
 }
 

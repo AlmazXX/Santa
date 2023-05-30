@@ -47,8 +47,9 @@ export interface ApiResponse<Type> {
 export interface ApiParty {
   _id: string;
   title: string;
-  image: string | null;
   creator: string;
+  image: string | null;
+  gambled: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,7 +62,7 @@ export interface IParty {
 export interface ApiParticipant {
   _id: string;
   user: Omit<ApiUser, 'token'>;
-  party: Pick<ApiParty, '_id' | 'title' | 'image'>;
+  party: Pick<ApiParty, '_id' | 'title' | 'creator' | 'image'>;
   victim: string;
   createdAt: string;
   updatedAt: string;
