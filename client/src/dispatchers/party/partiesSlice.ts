@@ -2,10 +2,11 @@ import { RootState } from '@/store/store';
 import { ApiParty, GlobalError, ValidationError } from '@/types';
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { createParty, getParties } from './partiesThunk';
+import { createParty, getParties, getSingleParty } from './partiesThunk';
 
 interface InitialParties {
   items: ApiParty[];
+  item: ApiParty | null;
   loading: boolean;
   submitting: boolean;
   error: ValidationError | GlobalError | null;
@@ -13,6 +14,7 @@ interface InitialParties {
 
 const initialState: InitialParties = {
   items: [],
+  item: null,
   loading: false,
   submitting: false,
   error: null,
@@ -48,15 +50,24 @@ const partiesSlice = createSlice({
       })
       .addCase(createParty.rejected, (state, { payload: error }) => {
         state.submitting = false;
-        console.log(error);
-
         state.error = error || null;
+      })
+      .addCase(getSingleParty.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSingleParty.fulfilled, (state, { payload: party }) => {
+        state.loading = false;
+        state.item = party;
+      })
+      .addCase(getSingleParty.rejected, (state) => {
+        state.loading = false;
       });
   },
 });
 
 export const partiesReducer = partiesSlice.reducer;
 export const selectParties = (state: RootState) => state.parties.items;
+export const selectSingleParty = (state: RootState) => state.parties.item;
 export const selectPartiesLoading = (state: RootState) => state.parties.loading;
 export const selectPartiesSubmitting = (state: RootState) =>
   state.parties.submitting;

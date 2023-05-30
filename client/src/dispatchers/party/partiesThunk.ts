@@ -49,3 +49,13 @@ export const createParty = createAsyncThunk<
     throw error;
   }
 });
+
+export const getSingleParty = createAsyncThunk<ApiParty, string>(
+  'parties/getSingle',
+  async (partyId) => {
+    const { data } = await axiosApi.get<ApiResponse<ApiParty>>(
+      `/parties/${partyId}`,
+    );
+    return <ApiParty>data.result;
+  },
+);
