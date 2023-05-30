@@ -5,15 +5,15 @@ import { IParticipant } from '@/types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect, useState } from 'react';
+import React from 'react';
 
 const useJoin = (party: string) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const [state, setState] = useState<IParticipant>({ user: '', party });
+  const [state, setState] = React.useState<IParticipant>({ user: '', party });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (user) {
       setState((prev) => ({ ...prev, user: user._id }));
     }
