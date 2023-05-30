@@ -6,12 +6,6 @@
     0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-.button:hover .button__icon {
-  transform: scale(1.5);
-}
-
-.button__icon {
-  width: 50%;
-  height: 50%;
-  transition: transform 50ms ease-out;
+.button:hover {
+  transform: scale(1.05);
 }
