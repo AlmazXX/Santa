@@ -5,6 +5,7 @@ import { imageUpload } from '../configs/multer';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Participant from '../models/Participant';
 import Party from '../models/Party';
+import Wishlist from '../models/Wishlist';
 import { IParty, PageLimit, switchToString } from '../types';
 
 type SearchParam = Partial<
@@ -149,6 +150,7 @@ partyRouter.delete('/:id', auth, async (req, res, next) => {
 
     if (deletedParty) {
       await Participant.deleteMany({ party: deletedParty._id });
+      await Wishlist.deleteMany({ party: deletedParty._id });
     }
 
     return res.send({ message: 'Party is deleted', result: deletedParty });
