@@ -1,6 +1,6 @@
 import { RootState } from '@/store/store';
 import { ApiWishlist } from '@/types';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { getWishlist } from './wishlistsThunk';
 
@@ -11,6 +11,7 @@ interface InitialWishlist {
   items: ApiWishlist[];
   currentPage: number;
   totalCount: number;
+  wishBoard: number;
 }
 
 const initialState: InitialWishlist = {
@@ -20,6 +21,7 @@ const initialState: InitialWishlist = {
   items: [],
   currentPage: 1,
   totalCount: 0,
+  wishBoard: 0,
 };
 
 const wishlistsSlice = createSlice({
@@ -37,6 +39,9 @@ const wishlistsSlice = createSlice({
     },
     closeForm: (state) => {
       state.isWishlistFormOpen = false;
+    },
+    setWishBoard: (state, { payload }: PayloadAction<number>) => {
+      state.wishBoard = payload;
     },
   },
   extraReducers(builder) {
@@ -61,12 +66,13 @@ const wishlistsSlice = createSlice({
 });
 
 export const wishlistsReducer = wishlistsSlice.reducer;
-export const { openDrawer, closeDrawer, openForm, closeForm } =
+export const { openDrawer, closeDrawer, openForm, closeForm, setWishBoard } =
   wishlistsSlice.actions;
 export const selectWishlistIsOpen = (state: RootState) =>
   state.wishlists.isWishlistDrawerOpen;
 export const selectWishlistFormIsOpen = (state: RootState) =>
   state.wishlists.isWishlistFormOpen;
+export const selectWishBoard = (state: RootState) => state.wishlists.wishBoard;
 export const selectWishlist = (state: RootState) => state.wishlists.items;
 export const selectWishlistLoading = (state: RootState) =>
   state.wishlists.loading;

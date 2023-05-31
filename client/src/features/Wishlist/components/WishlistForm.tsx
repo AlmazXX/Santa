@@ -1,6 +1,6 @@
 import FileUpload from '@/components/UI/FileUpload/FileUpload';
 import { selectUser } from '@/dispatchers/user/usersSlice';
-import { closeForm } from '@/dispatchers/wishlist/wishlistsSlice';
+import { closeForm, setWishBoard } from '@/dispatchers/wishlist/wishlistsSlice';
 import {
   addWishItem,
   getWishlist,
@@ -44,6 +44,7 @@ const WishlistForm: React.FC<Props> = ({ party }) => {
     await dispatch(addWishItem(state));
     dispatch(closeForm());
     dispatch(getWishlist({ user: user?._id, party }));
+    dispatch(setWishBoard(0));
   };
 
   return (
