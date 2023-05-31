@@ -5,6 +5,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 import {
   createParty,
   deleteParty,
+  editParty,
   getParties,
   getSingleParty,
 } from './partiesThunk';
@@ -77,6 +78,15 @@ const partiesSlice = createSlice({
       })
       .addCase(deleteParty.rejected, (state) => {
         state.deleting = false;
+      })
+      .addCase(editParty.pending, (state) => {
+        state.submitting = true;
+      })
+      .addCase(editParty.fulfilled, (state) => {
+        state.submitting = false;
+      })
+      .addCase(editParty.rejected, (state) => {
+        state.submitting = false;
       });
   },
 });

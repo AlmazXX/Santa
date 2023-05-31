@@ -66,3 +66,24 @@ export const deleteParty = createAsyncThunk(
     await axiosApi.delete(`/parties/${id}`);
   },
 );
+
+export const editParty = createAsyncThunk<
+  void,
+  { id: string; party: IParty },
+  { rejectValue: ValidationError | GlobalError }
+>('parties/edit', async ({ id, party }, { rejectWithValue }) => {
+  try {
+    await axiosApi.put(`/parties/${id}`, party);
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response &&
+      [400, 401, 403, 404].includes(error.response.status)
+    ) {
+      return rejectWithValue(
+        error.response.data as ValidationError | GlobalError,
+      );
+    }
+    throw error;
+  }
+});

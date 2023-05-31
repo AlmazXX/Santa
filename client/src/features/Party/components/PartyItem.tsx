@@ -7,6 +7,7 @@ import useUserInParty from '@/hooks/useIsInParty';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ApiParty } from '@/types';
 import { Button, Grid, Typography } from '@mui/material';
+import { useRouter } from 'next/router';
 import React from 'react';
 import useJoin from '../../../hooks/useJoin';
 
@@ -21,14 +22,22 @@ const PartyItem: React.FC<Props> = ({ party }) => {
   const isUserInParty = useUserInParty(party._id);
   const isUserCreator = useIsCreator(party._id);
   const partyImage = useImageSrc(party.image);
+  const router = useRouter();
 
   const onDelete = async () => {
     await dispatch(deleteParty(party._id));
     dispatch(getParties());
   };
 
+  const onEdit = async (id: string) => {
+    router.push(`parties/edit/${id}`);
+  };
+
   const cardActions = isUserCreator
-    ? [{ action: onDelete, title: 'Delete' }]
+    ? [
+        { action: onDelete, title: 'Delete' },
+        { action: () => onEdit(party._id), title: 'Edit' },
+      ]
     : undefined;
 
   return (
