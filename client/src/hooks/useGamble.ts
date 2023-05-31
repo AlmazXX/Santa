@@ -3,7 +3,6 @@ import {
   getParticipants,
 } from '@/dispatchers/participant/participantsThunk';
 import { useAppDispatch } from '@/store/hooks';
-import React from 'react';
 
 const useGamble = (id: string) => {
   const dispatch = useAppDispatch();
