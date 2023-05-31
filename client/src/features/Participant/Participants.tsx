@@ -1,55 +1,33 @@
-import AddButton from '@/components/UI/AddButton/AddButton';
+import CardButton from '@/components/UI/CardButton/CardButton';
 import { selectParticipants } from '@/dispatchers/participant/participantsSlice';
-import {
-  gambleParticipants,
-  getParticipants,
-} from '@/dispatchers/participant/participantsThunk';
-import { selectSingleParty } from '@/dispatchers/party/partiesSlice';
-import { getSingleParty } from '@/dispatchers/party/partiesThunk';
-import { selectUser } from '@/dispatchers/user/usersSlice';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { ApiParty } from '@/types';
+import useGamble from '@/hooks/useGamble';
+import useIsCreator from '@/hooks/useIsCreator';
+import useUserInParty from '@/hooks/useIsInParty';
+import { useAppSelector } from '@/store/hooks';
 import { Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
-import useJoin from '../Party/hooks/useJoin';
+import useJoin from '../../hooks/useJoin';
 import ParticipantItem from './components/ParticipantItem';
 
 const Participants: React.FC = () => {
   const router = useRouter();
-  const { party: partyId } = router.query as { party: string };
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
-  const party = useAppSelector(selectSingleParty);
+  const { party } = router.query as { party: string };
   const participants = useAppSelector(selectParticipants);
+  const isUserInParty = useUserInParty(party);
+  const isUserCreator = useIsCreator(party);
+  const join = useJoin(party);
+  const gample = useGamble(party);
 
-  const join = useJoin(partyId);
-  const gample = async () => {
-    await dispatch(gambleParticipants(partyId));
-    dispatch(getSingleParty(partyId));
-    dispatch(getParticipants({ party: partyId }));
-  };
-
-  const gampleBtnCondition = party?.gambled
-    ? false
-    : party?.creator === user?._id;
-  const joinBtnCondition = participants.some(
-    (participant) => participant.user._id === user?._id,
-  );
-
-  const participant = participants.find(
-    (participant) => participant.user._id === user?._id,
-  );
-
-  const gambleButton = gampleBtnCondition ? (
+  const gambleButton = isUserCreator ? (
     <Grid item>
-      <AddButton onClick={gample} />
+      <CardButton onClick={gample}>Gamble</CardButton>
     </Grid>
   ) : null;
 
-  const joinButton = joinBtnCondition ? null : (
+  const joinButton = isUserInParty ? null : (
     <Grid item>
-      <AddButton onClick={join} />
+      <CardButton onClick={join}>Join</CardButton>
     </Grid>
   );
 
@@ -61,12 +39,9 @@ const Participants: React.FC = () => {
       <Grid item container direction="row" alignItems="stretch" spacing={2}>
         {gambleButton}
         {joinButton}
-        {participants.map((p) => (
-          <Grid item key={p._id}>
-            <ParticipantItem
-              participant={p}
-              isVictim={p.user._id === participant?.victim}
-            />
+        {participants.map((participant) => (
+          <Grid item key={participant._id}>
+            <ParticipantItem participant={participant} />
           </Grid>
         ))}
       </Grid>

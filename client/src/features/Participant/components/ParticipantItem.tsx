@@ -1,23 +1,23 @@
 import Card from '@/components/UI/Card/Card';
-import { apiURL } from '@/constants';
+import useImageSrc from '@/hooks/useImageSrc';
+import useIsVictim from '@/hooks/useIsVictim';
 import { ApiParticipant } from '@/types';
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
 
 interface Props {
   participant: Pick<ApiParticipant, 'user' | 'party' | 'victim'>;
-  isVictim: boolean;
 }
 
-const ParticipantItem: React.FC<Props> = ({ participant, isVictim }) => {
-  const participantAvatar =
-    participant.user.avatar && apiURL + '/' + participant.user.avatar;
+const ParticipantItem: React.FC<Props> = ({ participant }) => {
+  const isVictim = useIsVictim(participant);
+  const participantAvatar = useImageSrc(participant.user.avatar);
 
-  const victim = isVictim && (
+  const victim = isVictim ? (
     <Grid item>
-      <Typography>Your victime</Typography>
+      <Typography>Your victim</Typography>
     </Grid>
-  );
+  ) : null;
 
   return (
     <Card image={participantAvatar}>
