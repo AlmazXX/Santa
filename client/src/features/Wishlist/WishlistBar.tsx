@@ -5,6 +5,7 @@ import {
   selectWishlistFormIsOpen,
   selectWishlistIsOpen,
 } from '@/dispatchers/wishlist/wishlistsSlice';
+import useIsGambled from '@/hooks/useIsGambled';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import CloseIcon from '@mui/icons-material/Close';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -17,11 +18,12 @@ import style from './WishlistBar.module.css';
 
 const WishlistBar: React.FC = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { party } = router.query as { party: string };
   const wishlist = useAppSelector(selectWishlist);
   const isWishlistOpen = useAppSelector(selectWishlistIsOpen);
   const isFormOpen = useAppSelector(selectWishlistFormIsOpen);
-  const router = useRouter();
-  const { party } = router.query as { party: string };
+  const isPartyGambled = useIsGambled(party);
 
   return (
     <Drawer
@@ -59,21 +61,23 @@ const WishlistBar: React.FC = () => {
             </IconButton>
           </Grid>
         </Grid>
-        <Grid item container direction="column" spacing={2}>
-          <Grid item display={isFormOpen ? 'none' : 'block'} xs>
-            <Button
-              color="success"
-              variant="contained"
-              onClick={() => dispatch(openForm())}
-              style={{ width: '100%' }}
-            >
-              Add wishlist
-            </Button>
+        {isPartyGambled ? null : (
+          <Grid item container direction="column" spacing={2}>
+            <Grid item display={isFormOpen ? 'none' : 'block'} xs>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={() => dispatch(openForm())}
+                style={{ width: '100%' }}
+              >
+                Add wishlist
+              </Button>
+            </Grid>
+            <Grid item display={isFormOpen ? 'block' : 'none'}>
+              <WishlistForm party={party} />
+            </Grid>
           </Grid>
-          <Grid item display={isFormOpen ? 'block' : 'none'}>
-            <WishlistForm party={party} />
-          </Grid>
-        </Grid>
+        )}
         <Grid item container direction="column" alignItems="center" spacing={2}>
           {wishlist.map((wishItem) => (
             <Grid item key={wishItem._id}>

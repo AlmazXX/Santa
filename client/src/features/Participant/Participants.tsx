@@ -2,6 +2,7 @@ import CardButton from '@/components/UI/CardButton/CardButton';
 import { selectParticipants } from '@/dispatchers/participant/participantsSlice';
 import useGamble from '@/hooks/useGamble';
 import useIsCreator from '@/hooks/useIsCreator';
+import useIsGambled from '@/hooks/useIsGambled';
 import useUserInParty from '@/hooks/useIsInParty';
 import { useAppSelector } from '@/store/hooks';
 import { Grid, Typography } from '@mui/material';
@@ -16,20 +17,23 @@ const Participants: React.FC = () => {
   const participants = useAppSelector(selectParticipants);
   const isUserInParty = useUserInParty(party);
   const isUserCreator = useIsCreator(party);
+  const isPartyGambled = useIsGambled(party);
   const join = useJoin(party);
   const gample = useGamble(party);
 
-  const gambleButton = isUserCreator ? (
-    <Grid item>
-      <CardButton onClick={gample}>Gamble</CardButton>
-    </Grid>
-  ) : null;
+  const gambleButton =
+    isUserCreator && !isPartyGambled ? (
+      <Grid item>
+        <CardButton onClick={gample}>Gamble</CardButton>
+      </Grid>
+    ) : null;
 
-  const joinButton = isUserInParty ? null : (
-    <Grid item>
-      <CardButton onClick={join}>Join</CardButton>
-    </Grid>
-  );
+  const joinButton =
+    isUserInParty || isPartyGambled ? null : (
+      <Grid item>
+        <CardButton onClick={join}>Join</CardButton>
+      </Grid>
+    );
 
   return (
     <Grid container spacing={1}>

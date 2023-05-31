@@ -3,6 +3,7 @@ import { selectParticipantJoining } from '@/dispatchers/participant/participants
 import { deleteParty, getParties } from '@/dispatchers/party/partiesThunk';
 import useImageSrc from '@/hooks/useImageSrc';
 import useIsCreator from '@/hooks/useIsCreator';
+import useIsGambled from '@/hooks/useIsGambled';
 import useUserInParty from '@/hooks/useIsInParty';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ApiParty } from '@/types';
@@ -21,6 +22,7 @@ const PartyItem: React.FC<Props> = ({ party }) => {
   const join = useJoin(party._id);
   const isUserInParty = useUserInParty(party._id);
   const isUserCreator = useIsCreator(party._id);
+  const isPartyGambled = useIsGambled(party._id);
   const partyImage = useImageSrc(party.image);
   const router = useRouter();
 
@@ -57,7 +59,7 @@ const PartyItem: React.FC<Props> = ({ party }) => {
         <Grid item>
           <Typography variant="h5">{party.title}</Typography>
         </Grid>
-        {isUserInParty ? null : (
+        {isUserInParty || isPartyGambled ? null : (
           <Grid item>
             <Button
               onClick={join}
