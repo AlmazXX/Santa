@@ -47,7 +47,7 @@ const WishlistBar: React.FC = () => {
     if (wishBoard === 1 && victim) {
       dispatch(getWishlist({ party, user: victim }));
     }
-  }, [user, victim, wishBoard, dispatch]);
+  }, [user, victim, party, wishBoard, dispatch]);
 
   const onChange = (_event: React.SyntheticEvent, value: number) => {
     dispatch(setWishBoard(value));
@@ -142,7 +142,7 @@ const WishlistBar: React.FC = () => {
                     </Grid>
                   ))
                 ) : (
-                  <Typography>You don't have victim yet</Typography>
+                  <Typography>You do not have victim yet</Typography>
                 )}
               </Grid>
             </TabPanel>
