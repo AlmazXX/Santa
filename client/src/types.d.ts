@@ -15,6 +15,8 @@ export interface User {
   firstname: string;
   lastname: string;
   avatar: string;
+  createdPartyIds?: string[];
+  userPartiesWithVictims?: [party: string, victim: string][];
 }
 
 export interface ValidationError {

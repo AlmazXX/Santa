@@ -6,6 +6,8 @@ import config from '../configs/config';
 import { imageUpload } from '../configs/multer';
 import downloadFile from '../helpers/downloadImg';
 import auth, { RequestWithUser } from '../middlewares/auth';
+import Participant from '../models/Participant';
+import Party from '../models/Party';
 import User from '../models/User';
 
 const userRouter = Router();
@@ -131,10 +133,19 @@ userRouter.delete('/sessions', async (req, res, next) => {
 userRouter.get('/me', auth, async (req, res, next) => {
   try {
     const { user } = <RequestWithUser>req;
+    const createdParties = await Party.find({ creator: user._id });
+    const participatingParties = await Participant.find({ user: user._id });
+
+    const userData = user.toObject();
+    const createdPartyIds = createdParties.map((party) => party._id);
+    const userPartiesWithVictims = participatingParties.map((party) => [
+      party.party,
+      party.victim,
+    ]);
 
     return res.send({
       message: 'User found',
-      result: user,
+      result: { ...userData, createdPartyIds, userPartiesWithVictims },
     });
   } catch (error) {
     return next();
