@@ -1,6 +1,5 @@
 import Layout from '@/components/UI/Layout/Layout';
 import { getParticipants } from '@/dispatchers/participant/participantsThunk';
-import { getSingleParty } from '@/dispatchers/party/partiesThunk';
 import { selectUser } from '@/dispatchers/user/usersSlice';
 import { openDrawer } from '@/dispatchers/wishlist/wishlistsSlice';
 import { getWishlist } from '@/dispatchers/wishlist/wishlistsThunk';
@@ -56,7 +55,6 @@ export const getServerSideProps: GetServerSideProps =
     const { party } = params as { party: string };
 
     await store.dispatch(getParticipants({ party }));
-    await store.dispatch(getSingleParty(party));
     user && (await store.dispatch(getWishlist({ party, user: user._id })));
 
     return { props: {} };
