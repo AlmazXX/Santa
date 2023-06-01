@@ -51,7 +51,7 @@ export interface ApiParty {
   title: string;
   creator: string;
   image: string | null;
-  gambled: string;
+  gambled: boolean;
   createdAt: string;
   updatedAt: string;
 }
