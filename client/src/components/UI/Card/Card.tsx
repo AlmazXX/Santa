@@ -10,13 +10,21 @@ import style from './Card.module.css';
 interface Props extends React.PropsWithChildren {
   image?: string | null;
   link?: string;
+  width?: string;
   actions?: {
     action: () => void;
     title: string;
+    isHidden?: boolean;
   }[];
 }
 
-const CutsomCard: React.FC<Props> = ({ image, link, actions, children }) => {
+const CutsomCard: React.FC<Props> = ({
+  image,
+  link,
+  width,
+  actions,
+  children,
+}) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
@@ -41,11 +49,13 @@ const CutsomCard: React.FC<Props> = ({ image, link, actions, children }) => {
           <MoreVertIcon />
         </IconButton>
         <Menu anchorEl={anchorEl} open={isOpen} onClose={onClose}>
-          {actions.map((action) => (
-            <MenuItem key={action.title} onClick={action.action}>
-              {action.title}
-            </MenuItem>
-          ))}
+          {actions
+            .filter((action) => !action.isHidden)
+            .map((action) => (
+              <MenuItem key={action.title} onClick={action.action}>
+                {action.title}
+              </MenuItem>
+            ))}
         </Menu>
       </>
     ) : null;
@@ -53,7 +63,7 @@ const CutsomCard: React.FC<Props> = ({ image, link, actions, children }) => {
   return (
     <Card
       className={style.card}
-      style={existingLink ? { cursor: 'pointer' } : {}}
+      style={existingLink ? { cursor: 'pointer', width } : { width }}
     >
       {children}
       <Image
