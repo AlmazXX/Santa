@@ -23,7 +23,7 @@ const PartyCreate: React.FC = () => {
 
       if (meta.requestStatus === 'fulfilled') {
         enqueueSnackbar('Party created successfully', { variant: 'success' });
-        router.push('/parties');
+        router.back();
       } else if (meta.requestStatus === 'rejected') {
         const errorMessage = ['No token', 'Wrong token!'].includes(error.error)
           ? 'Please login to create a party'
