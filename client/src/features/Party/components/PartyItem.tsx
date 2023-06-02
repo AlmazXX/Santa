@@ -1,7 +1,10 @@
 import Card from '@/components/UI/Card/Card';
-import { selectParticipantJoining } from '@/dispatchers/participant/participantsSlice';
-import { gambleParticipants } from '@/dispatchers/participant/participantsThunk';
+import {
+  gambleParticipants,
+  removeParticipant,
+} from '@/dispatchers/participant/participantsThunk';
 import { deleteParty, getParties } from '@/dispatchers/party/partiesThunk';
+import { selectUser } from '@/dispatchers/user/usersSlice';
 import useDispatchAction from '@/hooks/useDispatchAction';
 import useImageSrc from '@/hooks/useImageSrc';
 import useIsCreator from '@/hooks/useIsCreator';
@@ -9,7 +12,7 @@ import useIsGambled from '@/hooks/useIsGambled';
 import useUserInParty from '@/hooks/useIsInParty';
 import { useAppSelector } from '@/store/hooks';
 import { ApiParty } from '@/types';
-import { Button, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
 import useJoin from '../../../hooks/useJoin';
@@ -20,35 +23,49 @@ interface Props {
 }
 
 const PartyItem: React.FC<Props> = ({ party, isBanner }) => {
-  const joining = useAppSelector(selectParticipantJoining);
-  const join = useJoin(party._id);
-  const gample = useDispatchAction(gambleParticipants(party._id));
+  const user = useAppSelector(selectUser);
+  const onJoin = useJoin(party._id);
+  const onGable = useDispatchAction(gambleParticipants(party._id));
   const isUserInParty = useUserInParty(party._id);
   const isUserCreator = useIsCreator(party._id);
   const isPartyGambled = useIsGambled(party._id);
   const partyImage = useImageSrc(party.image);
   const router = useRouter();
   const onDelete = useDispatchAction(deleteParty(party._id), getParties());
+  const onLeave = useDispatchAction(
+    removeParticipant({ userId: user ? user._id : '', partyId: party._id }),
+  );
 
-  const onEdit = async (id: string) => {
-    router.push(`parties/edit/${id}`);
+  const onEdit = async () => {
+    router.push(`parties/edit/${party._id}`);
   };
 
-  const cardActions = [
+  const creatorActions = [
     {
-      action: gample,
+      action: onGable,
       title: 'Gamble',
-      isHidden: isPartyGambled || !isUserInParty,
+      isHidden: isPartyGambled,
     },
     {
-      action: () => onEdit(party._id),
+      action: onEdit,
       title: 'Edit',
-      isHidden: !isUserCreator,
     },
     {
       action: onDelete,
       title: 'Delete',
-      isHidden: !isUserCreator,
+    },
+  ];
+
+  const userActions = [
+    {
+      action: onJoin,
+      title: 'Join party',
+      isHidden: isUserInParty || isPartyGambled,
+    },
+    {
+      action: onLeave,
+      title: 'Leave party',
+      isHidden: !isUserInParty || isPartyGambled,
     },
   ];
 
@@ -56,7 +73,7 @@ const PartyItem: React.FC<Props> = ({ party, isBanner }) => {
     <Card
       image={partyImage}
       link={'parties/' + party._id}
-      actions={cardActions}
+      actions={isUserCreator ? creatorActions : userActions}
       width={isBanner ? '100%' : ''}
     >
       <Grid
@@ -70,17 +87,6 @@ const PartyItem: React.FC<Props> = ({ party, isBanner }) => {
         <Grid item>
           <Typography variant="h5">{party.title}</Typography>
         </Grid>
-        {isUserInParty || isPartyGambled ? null : (
-          <Grid item>
-            <Button
-              onClick={join}
-              disabled={joining}
-              style={{ marginLeft: '-8px' }}
-            >
-              Join now
-            </Button>
-          </Grid>
-        )}
       </Grid>
     </Card>
   );
