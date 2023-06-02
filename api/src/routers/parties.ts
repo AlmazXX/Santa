@@ -136,11 +136,7 @@ partyRouter.delete('/:id', auth, async (req, res, next) => {
 
     const party = await Party.findById(partyId);
 
-    if (!party) {
-      return res.status(404).send('Party is not found');
-    }
-
-    if (!party.creator.equals(user._id)) {
+    if (party && !party.creator.equals(user._id)) {
       return res
         .status(403)
         .send({ error: 'You are not creator of the party' });
