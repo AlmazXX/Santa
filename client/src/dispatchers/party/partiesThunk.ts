@@ -73,7 +73,18 @@ export const editParty = createAsyncThunk<
   { rejectValue: ValidationError | GlobalError }
 >('parties/edit', async ({ id, party }, { rejectWithValue }) => {
   try {
-    await axiosApi.put(`/parties/${id}`, party);
+    const formData = new FormData();
+    const keys = Object.keys(party) as (keyof IParty)[];
+
+    keys.forEach((key) => {
+      const value = party[key];
+      if (value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    const { data } = await axiosApi.put(`/parties/${id}`, formData);
+    return data;
   } catch (error) {
     if (
       isAxiosError(error) &&

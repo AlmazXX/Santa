@@ -35,7 +35,7 @@ const Edit: React.FC = () => {
       );
 
       if (meta.requestStatus === 'fulfilled') {
-        enqueueSnackbar('Party created successfully', { variant: 'success' });
+        enqueueSnackbar('Party edited successfully', { variant: 'success' });
         router.back();
       } else if (meta.requestStatus === 'rejected') {
         enqueueSnackbar(error.error, { variant: 'error' });
