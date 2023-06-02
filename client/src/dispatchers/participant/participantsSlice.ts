@@ -6,6 +6,7 @@ import {
   gambleParticipants,
   getParticipants,
   joinParty,
+  removeParticipant,
 } from './participantsThunk';
 
 interface InitialParticipants {
@@ -13,6 +14,7 @@ interface InitialParticipants {
   loading: boolean;
   joining: boolean;
   gambling: boolean;
+  leaving: boolean;
 }
 
 const initialState: InitialParticipants = {
@@ -20,6 +22,7 @@ const initialState: InitialParticipants = {
   loading: false,
   joining: false,
   gambling: false,
+  leaving: false,
 };
 
 const participantsSlice = createSlice({
@@ -59,6 +62,15 @@ const participantsSlice = createSlice({
       })
       .addCase(gambleParticipants.rejected, (state) => {
         state.gambling = false;
+      })
+      .addCase(removeParticipant.pending, (state) => {
+        state.leaving = true;
+      })
+      .addCase(removeParticipant.fulfilled, (state) => {
+        state.leaving = false;
+      })
+      .addCase(removeParticipant.rejected, (state) => {
+        state.leaving = false;
       });
   },
 });
@@ -70,5 +82,7 @@ export const selectParticipantsLoading = (state: RootState) =>
   state.participants.loading;
 export const selectParticipantJoining = (state: RootState) =>
   state.participants.joining;
-export const selectParticipantsJoining = (state: RootState) =>
+export const selectParticipantsGambling = (state: RootState) =>
   state.participants.gambling;
+export const selectParticipantsLeaving = (state: RootState) =>
+  state.participants.leaving;

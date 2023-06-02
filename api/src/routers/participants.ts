@@ -3,6 +3,7 @@ import { Error } from 'mongoose';
 import auth, { RequestWithUser } from '../middlewares/auth';
 import Participant from '../models/Participant';
 import Party from '../models/Party';
+import Wishlist from '../models/Wishlist';
 import { IParticipant, PageLimit, switchToString } from '../types';
 
 type SearchParam = Partial<switchToString<IParticipant> & PageLimit>;
@@ -93,6 +94,40 @@ participantRouter.post('/:party/gamble', auth, async (req, res, next) => {
       return res.status(400).send(error);
     }
     return next(error);
+  }
+});
+
+participantRouter.delete('/', auth, async (req, res, next) => {
+  try {
+    const userId = req.query.user;
+    const partyId = req.query.party;
+
+    if (!userId) {
+      return res.status(404).send({ error: 'User ID is required' });
+    }
+
+    if (!partyId) {
+      return res.status(404).send({ error: 'Party ID is required' });
+    }
+
+    const deletedParticipant = await Participant.findOneAndDelete({
+      user: userId,
+      party: partyId,
+    });
+
+    if (deletedParticipant) {
+      await Wishlist.deleteMany({
+        user: userId,
+        party: partyId,
+      });
+    }
+
+    return res.send({
+      message: 'You left the party',
+      result: deletedParticipant,
+    });
+  } catch (error) {
+    return next();
   }
 });
 

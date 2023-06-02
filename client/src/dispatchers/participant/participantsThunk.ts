@@ -66,3 +66,12 @@ export const gambleParticipants = createAsyncThunk<
     throw error;
   }
 });
+
+export const removeParticipant = createAsyncThunk(
+  'participants/leave',
+  async ({ userId, partyId }: { userId: string; partyId: string }) => {
+    await axiosApi.delete(`/participants`, {
+      params: { user: userId, party: partyId },
+    });
+  },
+);
