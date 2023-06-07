@@ -99,25 +99,21 @@ participantRouter.post('/:party/gamble', auth, async (req, res, next) => {
 
 participantRouter.delete('/', auth, async (req, res, next) => {
   try {
-    const userId = req.query.user;
+    const { user } = <RequestWithUser>req;
     const partyId = req.query.party;
-
-    if (!userId) {
-      return res.status(404).send({ error: 'User ID is required' });
-    }
 
     if (!partyId) {
       return res.status(404).send({ error: 'Party ID is required' });
     }
 
     const deletedParticipant = await Participant.findOneAndDelete({
-      user: userId,
+      user: user._id,
       party: partyId,
     });
 
     if (deletedParticipant) {
       await Wishlist.deleteMany({
-        user: userId,
+        user: user._id,
         party: partyId,
       });
     }
