@@ -1,51 +1,56 @@
 import Card from '@/components/UI/Card/Card';
+import {
+  openWishModal,
+  setWishItem,
+} from '@/dispatchers/wishlist/wishlistsSlice';
+import {
+  deleteWishItem,
+  getWishlist,
+} from '@/dispatchers/wishlist/wishlistsThunk';
 import useImageSrc from '@/hooks/useImageSrc';
+import { useAppDispatch } from '@/store/hooks';
 import { ApiWishlist } from '@/types';
 import { Button, Grid, Typography } from '@mui/material';
 import React from 'react';
-import WishModal from './WishModal';
 
 interface Props {
   wishItem: ApiWishlist;
 }
 
 const WishItem: React.FC<Props> = ({ wishItem }) => {
+  const dispatch = useAppDispatch();
   const wishImage = useImageSrc(wishItem.image);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const openModal = () => {
-    setIsModalOpen(true);
+    dispatch(setWishItem(wishItem));
+    dispatch(openWishModal());
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const deleteItem = async () => {
+    await dispatch(deleteWishItem(wishItem._id));
+    dispatch(getWishlist({ party: wishItem.party, user: wishItem._id }));
   };
+
+  const userActions = [{ action: deleteItem, title: 'Delete' }];
 
   return (
-    <>
-      <Card image={wishImage}>
-        <Grid
-          container
-          direction="column"
-          alignItems="flex-start"
-          position="relative"
-          zIndex={2}
-          p={2}
-        >
-          <Grid item>
-            <Typography variant="h6">{wishItem.title}</Typography>
-          </Grid>
-          <Button onClick={openModal} style={{ marginLeft: '-8px' }}>
-            See full
-          </Button>
+    <Card image={wishImage} actions={userActions}>
+      <Grid
+        container
+        direction="column"
+        alignItems="flex-start"
+        position="relative"
+        zIndex={2}
+        p={2}
+      >
+        <Grid item>
+          <Typography variant="h6">{wishItem.title}</Typography>
         </Grid>
-      </Card>
-      <WishModal
-        wishItem={wishItem}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
-    </>
+        <Button onClick={openModal} style={{ marginLeft: '-8px' }}>
+          See full
+        </Button>
+      </Grid>
+    </Card>
   );
 };
 

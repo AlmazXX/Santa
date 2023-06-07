@@ -1,29 +1,30 @@
 import FileUpload from '@/components/UI/FileUpload/FileUpload';
-import { selectUser } from '@/dispatchers/user/usersSlice';
-import { closeForm, setWishBoard } from '@/dispatchers/wishlist/wishlistsSlice';
-import {
-  addWishItem,
-  getWishlist,
-} from '@/dispatchers/wishlist/wishlistsThunk';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { IWishlist } from '@/types';
 import { Button, Grid, TextField } from '@mui/material';
 import React from 'react';
 
 interface Props {
-  party: string;
+  party?: string;
+  existingWishItem?: IWishlist;
+  onSubmit: (wishItem: IWishlist) => void;
 }
 
-const WishlistForm: React.FC<Props> = ({ party }) => {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
+const initialState = {
+  party: '',
+  title: '',
+  address: '',
+  image: null,
+  description: '',
+};
+
+const WishlistForm: React.FC<Props> = ({
+  party,
+  existingWishItem = initialState,
+  onSubmit,
+}) => {
   const [state, setState] = React.useState<IWishlist>({
-    party,
-    user: user!._id,
-    title: '',
-    address: '',
-    image: null,
-    description: '',
+    ...existingWishItem,
+    party: party ? party : '',
   });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,10 +42,7 @@ const WishlistForm: React.FC<Props> = ({ party }) => {
 
   const onFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await dispatch(addWishItem(state));
-    dispatch(closeForm());
-    dispatch(getWishlist({ user: user?._id, party }));
-    dispatch(setWishBoard(0));
+    onSubmit(state);
   };
 
   return (
@@ -79,21 +77,10 @@ const WishlistForm: React.FC<Props> = ({ party }) => {
             onChange={onChange}
           />
         </Grid>
-        <Grid item container spacing={2}>
-          <Grid item>
-            <Button type="submit" color="success" variant="contained">
-              Add to wishlist
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              color="error"
-              variant="contained"
-              onClick={() => dispatch(closeForm())}
-            >
-              close
-            </Button>
-          </Grid>
+        <Grid item>
+          <Button type="submit" color="success" variant="contained">
+            Add to wishlist
+          </Button>
         </Grid>
       </Grid>
     </form>

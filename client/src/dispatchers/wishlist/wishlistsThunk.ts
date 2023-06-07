@@ -23,6 +23,16 @@ export const getWishlist = createAsyncThunk<
   return data.result as IPagination<ApiWishlist>;
 });
 
+export const getWishItem = createAsyncThunk<ApiWishlist, string>(
+  'wishlist/fetchOne',
+  async (id) => {
+    const { data } = await axiosApi.get<ApiResponse<ApiWishlist>>(
+      `/wishlist/${id}`,
+    );
+    return <ApiWishlist>data.result;
+  },
+);
+
 export const addWishItem = createAsyncThunk<
   void,
   IWishlist,
@@ -53,3 +63,10 @@ export const addWishItem = createAsyncThunk<
     throw error;
   }
 });
+
+export const deleteWishItem = createAsyncThunk(
+  'wishlist/delete',
+  async (id: string) => {
+    await axiosApi.delete(`/wishlists/${id}`);
+  },
+);

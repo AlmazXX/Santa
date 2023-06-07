@@ -1,18 +1,31 @@
+import {
+  closeWishModal,
+  selectWishItem,
+  selectWishModalIsOpen,
+  setWishItem,
+} from '@/dispatchers/wishlist/wishlistsSlice';
 import useImageSrc from '@/hooks/useImageSrc';
-import { ApiWishlist } from '@/types';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, Grid, IconButton, Typography } from '@mui/material';
 import Image from 'next/image';
 import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 
-interface Props {
-  wishItem: ApiWishlist;
-  isOpen: boolean;
-  onClose: () => void;
-}
+const WishModal: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const wishItem = useAppSelector(selectWishItem);
+  const isOpen = useAppSelector(selectWishModalIsOpen);
 
-const WishModal: React.FC<Props> = ({ wishItem, isOpen, onClose }) => {
+  if (!wishItem) {
+    return null;
+  }
+
   const wishImage = useImageSrc(wishItem.image);
+
+  const onClose = () => {
+    dispatch(closeWishModal());
+    dispatch(setWishItem(null));
+  };
 
   const onBackdropCLick = (_e: Record<never, never>, reason: string) => {
     if (reason === 'backdropClick') {
