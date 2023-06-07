@@ -8,9 +8,11 @@ interface Props extends React.PropsWithChildren {
 const ProtectedRoute: React.FC<Props> = ({ isAllowed, children }) => {
   const router = useRouter();
 
-  if (!isAllowed) {
-    void router.push('/login');
-  }
+  React.useEffect(() => {
+    if (!isAllowed) {
+      void router.push('/login');
+    }
+  }, []);
 
   return <>{isAllowed ? children : null}</>;
 };
