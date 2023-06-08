@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<Props> = ({ isAllowed, children }) => {
     if (!isAllowed) {
       void router.push('/login');
     }
-  }, []);
+  }, [isAllowed, router]);
 
   return <>{isAllowed ? children : null}</>;
 };
