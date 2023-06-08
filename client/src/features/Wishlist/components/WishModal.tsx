@@ -15,12 +15,13 @@ const WishModal: React.FC = () => {
   const dispatch = useAppDispatch();
   const wishItem = useAppSelector(selectWishItem);
   const isOpen = useAppSelector(selectWishModalIsOpen);
+  const wishImage = useImageSrc(
+    wishItem && wishItem.image ? wishItem.image : '',
+  );
 
   if (!wishItem) {
     return null;
   }
-
-  const wishImage = useImageSrc(wishItem.image);
 
   const onClose = () => {
     dispatch(closeWishModal());
