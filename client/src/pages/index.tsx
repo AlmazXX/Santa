@@ -10,7 +10,7 @@ const index: React.FC = () => {
   return (
     <Layout>
       <Grid container>
-        <Grid item>
+        <Grid item xs>
           <Parties />
         </Grid>
       </Grid>
