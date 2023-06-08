@@ -7,28 +7,18 @@ import { Button, CircularProgress, Grid, TextField } from '@mui/material';
 import React from 'react';
 
 interface Props {
-  party?: string;
-  existingWishItem?: IWishlist;
+  party: string;
   onSubmit: (wishItem: IWishlist) => void;
 }
 
-const initialState = {
-  party: '',
-  title: '',
-  address: '',
-  image: null,
-  description: '',
-};
-
-const WishlistForm: React.FC<Props> = ({
-  party,
-  existingWishItem = initialState,
-  onSubmit,
-}) => {
+const WishlistForm: React.FC<Props> = ({ party, onSubmit }) => {
   const submitting = useAppSelector(selectWishlistSubmitting);
   const [state, setState] = React.useState<IWishlist>({
-    ...existingWishItem,
-    party: party ? party : '',
+    party,
+    title: '',
+    address: '',
+    image: null,
+    description: '',
   });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
