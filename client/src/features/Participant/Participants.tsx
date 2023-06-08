@@ -1,11 +1,15 @@
-import { selectParticipants } from '@/dispatchers/participant/participantsSlice';
+import {
+  selectParticipants,
+  selectParticipantsLoading,
+} from '@/dispatchers/participant/participantsSlice';
 import { useAppSelector } from '@/store/hooks';
-import { Grid, Typography } from '@mui/material';
+import { CircularProgress, Grid, Typography } from '@mui/material';
 import React from 'react';
 import ParticipantItem from './components/ParticipantItem';
 
 const Participants: React.FC = () => {
   const participants = useAppSelector(selectParticipants);
+  const participantsLoading = useAppSelector(selectParticipantsLoading);
 
   const participantsList = participants.length ? (
     participants.map((participant) => (
@@ -25,7 +29,7 @@ const Participants: React.FC = () => {
         <Typography>Participants</Typography>
       </Grid>
       <Grid item container direction="row" alignItems="stretch" spacing={2}>
-        {participantsList}
+        {participantsLoading ? <CircularProgress /> : participantsList}
       </Grid>
     </Grid>
   );

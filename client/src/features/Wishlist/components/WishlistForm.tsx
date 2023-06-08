@@ -1,6 +1,9 @@
 import FileUpload from '@/components/UI/FileUpload/FileUpload';
+import { selectWishlistSubmitting } from '@/dispatchers/wishlist/wishlistsSlice';
+import { useAppSelector } from '@/store/hooks';
 import { IWishlist } from '@/types';
-import { Button, Grid, TextField } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import { Button, CircularProgress, Grid, TextField } from '@mui/material';
 import React from 'react';
 
 interface Props {
@@ -22,6 +25,7 @@ const WishlistForm: React.FC<Props> = ({
   existingWishItem = initialState,
   onSubmit,
 }) => {
+  const submitting = useAppSelector(selectWishlistSubmitting);
   const [state, setState] = React.useState<IWishlist>({
     ...existingWishItem,
     party: party ? party : '',
@@ -78,7 +82,12 @@ const WishlistForm: React.FC<Props> = ({
           />
         </Grid>
         <Grid item>
-          <Button type="submit" color="success" variant="contained">
+          <Button
+            type="submit"
+            color="success"
+            variant="contained"
+            endIcon={submitting ? <CircularProgress /> : <SendIcon />}
+          >
             Add to wishlist
           </Button>
         </Grid>

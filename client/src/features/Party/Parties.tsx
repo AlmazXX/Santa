@@ -1,6 +1,9 @@
-import { selectParties } from '@/dispatchers/party/partiesSlice';
+import {
+  selectParties,
+  selectPartiesLoading,
+} from '@/dispatchers/party/partiesSlice';
 import { useAppSelector } from '@/store/hooks';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
 import PartyItem from './components/PartyItem';
@@ -8,10 +11,23 @@ import PartyItem from './components/PartyItem';
 const Parties: React.FC = () => {
   const router = useRouter();
   const parties = useAppSelector(selectParties);
+  const loadingParties = useAppSelector(selectPartiesLoading);
 
   const onCreate = () => {
     router.push('/parties/create');
   };
+
+  const partiesList = parties.length ? (
+    parties.map((party) => (
+      <Grid key={party._id} item>
+        <PartyItem party={party} />
+      </Grid>
+    ))
+  ) : (
+    <Grid item>
+      <Typography>No parties yet</Typography>
+    </Grid>
+  );
 
   return (
     <Grid container spacing={1}>
@@ -26,11 +42,7 @@ const Parties: React.FC = () => {
         </Grid>
       </Grid>
       <Grid item container direction="row" alignItems="stretch" spacing={2}>
-        {parties.map((party) => (
-          <Grid key={party._id} item>
-            <PartyItem party={party} />
-          </Grid>
-        ))}
+        {loadingParties ? <CircularProgress /> : partiesList}
       </Grid>
     </Grid>
   );
