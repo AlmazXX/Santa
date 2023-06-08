@@ -1,4 +1,5 @@
 module.exports = {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -7,5 +8,9 @@ module.exports = {
         port: '8000',
       },
     ],
+  },
+  webpack(config) {
+    config.cache = true;
+    return config;
   },
 };
