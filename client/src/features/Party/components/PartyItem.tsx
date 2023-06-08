@@ -1,16 +1,21 @@
 import Card from '@/components/UI/Card/Card';
 import {
   gambleParticipants,
+  getParticipants,
   removeParticipant,
 } from '@/dispatchers/participant/participantsThunk';
-import { deleteParty, getParties } from '@/dispatchers/party/partiesThunk';
+import {
+  deleteParty,
+  getParties,
+  getSingleParty,
+} from '@/dispatchers/party/partiesThunk';
 import { selectUser } from '@/dispatchers/user/usersSlice';
-import useDispatchAction from '@/hooks/useDispatchAction';
+import { getMe } from '@/dispatchers/user/usersThunk';
 import useImageSrc from '@/hooks/useImageSrc';
 import useIsCreator from '@/hooks/useIsCreator';
 import useIsGambled from '@/hooks/useIsGambled';
 import useUserInParty from '@/hooks/useIsInParty';
-import { useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { ApiParty } from '@/types';
 import { Grid, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -23,18 +28,30 @@ interface Props {
 }
 
 const PartyItem: React.FC<Props> = ({ party, isBanner }) => {
+  const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const onJoin = useJoin(party._id);
-  const onGable = useDispatchAction(gambleParticipants(party._id));
   const isUserInParty = useUserInParty(party._id);
   const isUserCreator = useIsCreator(party._id);
-  const isPartyGambled = useIsGambled(party._id);
+  const isPartyGambled = useIsGambled();
   const partyImage = useImageSrc(party.image);
   const router = useRouter();
-  const onDelete = useDispatchAction(deleteParty(party._id), getParties());
-  const onLeave = useDispatchAction(
-    removeParticipant({ userId: user ? user._id : '', partyId: party._id }),
-  );
+
+  const onGamble = async () => {
+    await dispatch(gambleParticipants(party._id));
+    user && dispatch(getMe(user.token));
+    dispatch(getSingleParty(party._id));
+  };
+
+  const onDelete = async () => {
+    await dispatch(deleteParty(party._id));
+    dispatch(getParties());
+  };
+
+  const onLeave = async () => {
+    await dispatch(removeParticipant(party._id));
+    dispatch(getParticipants({ party: party._id }));
+  };
 
   const onEdit = async () => {
     router.push(`parties/edit/${party._id}`);
@@ -42,7 +59,7 @@ const PartyItem: React.FC<Props> = ({ party, isBanner }) => {
 
   const creatorActions = [
     {
-      action: onGable,
+      action: onGamble,
       title: 'Gamble',
       isHidden: isPartyGambled,
     },
