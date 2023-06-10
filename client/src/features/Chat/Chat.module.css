@@ -30,9 +30,3 @@
   overflow-y: auto;
   scroll-behavior: smooth;
 }
-
-.chatButton {
-  position: absolute;
-  bottom: 50px;
-  right: 50px;
-}
