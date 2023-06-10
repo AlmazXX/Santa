@@ -16,6 +16,7 @@ const run = async () => {
     await db.collection('parties').deleteMany({});
     await db.collection('participants').deleteMany({});
     await db.collection('wishlists').deleteMany({});
+    await db.collection('messages').deleteMany({});
   } catch {
     console.log('Collections were not present, skipping drop...');
   }
