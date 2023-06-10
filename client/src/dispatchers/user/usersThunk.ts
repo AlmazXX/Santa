@@ -1,4 +1,5 @@
 import axiosApi from '@/axiosApi';
+import { TOKEN } from '@/constants';
 import {
   ApiResponse,
   GlobalError,
@@ -31,7 +32,7 @@ export const register = createAsyncThunk<
     const { data } = await axiosApi.post<ApiResponse<User>>('/users', formData);
     const result = <User>data.result;
 
-    setCookie(null, 'token', result.token, {
+    setCookie(null, TOKEN, result.token, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     });
@@ -57,7 +58,7 @@ export const login = createAsyncThunk<
     );
     const result = <User>data.result;
 
-    setCookie(null, 'token', result.token, {
+    setCookie(null, TOKEN, result.token, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     });
@@ -82,7 +83,7 @@ export const googleLogin = createAsyncThunk<
     });
     const result = <User>data.result;
 
-    setCookie(null, 'token', result.token, {
+    setCookie(null, TOKEN, result.token, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     });
@@ -100,7 +101,7 @@ export const logout = createAsyncThunk(
   'users/logout',
   async (_, { dispatch }) => {
     await axiosApi.delete('/users/sessions');
-    destroyCookie(null, 'token');
+    destroyCookie(null, TOKEN);
     dispatch(unsetUser());
   },
 );
@@ -114,7 +115,7 @@ export const getMe = createAsyncThunk(
 
     const result = <User>data.result;
 
-    setCookie(null, 'token', result.token, {
+    setCookie(null, TOKEN, result.token, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/',
     });
