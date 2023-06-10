@@ -41,3 +41,13 @@ interface PageLimit {
   page: string;
   limit: string;
 }
+
+interface IMessage {
+  user: Types.ObjectId;
+  text: string;
+}
+
+interface IncomingMessage {
+  type: string;
+  payload: string;
+}
