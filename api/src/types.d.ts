@@ -44,6 +44,7 @@ interface PageLimit {
 
 interface IMessage {
   user: Types.ObjectId;
+  party: Types.ObjectId;
   text: string;
 }
 

@@ -1,5 +1,6 @@
-import { Schema, model, Types } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import { IMessage } from '../types';
+import Party from './Party';
 import User from './User';
 
 const MessageSchema = new Schema<IMessage>(
@@ -11,6 +12,15 @@ const MessageSchema = new Schema<IMessage>(
       validate: {
         validator: async (value: Types.ObjectId) => await User.findById(value),
         message: 'User does not exist',
+      },
+    },
+    party: {
+      type: Schema.Types.ObjectId,
+      ref: 'Party',
+      required: true,
+      validate: {
+        validator: async (value: Types.ObjectId) => await Party.findById(value),
+        message: 'Party does not exist',
       },
     },
     text: {
