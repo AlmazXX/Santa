@@ -3,8 +3,15 @@ import { Router } from 'express';
 import { HydratedDocument } from 'mongoose';
 import { WebSocket } from 'ws';
 import Message from '../models/Message';
+import Party from '../models/Party';
 import User from '../models/User';
-import { IncomingMessage, IUser } from '../types';
+import {
+  IMessage,
+  IncomingMessage,
+  IParty,
+  IUser,
+  switchToString,
+} from '../types';
 
 interface ActiveConnections {
   [id: string]: WebSocket;
@@ -28,6 +35,9 @@ const chatRouter = () => {
     activeConnections[id] = ws;
 
     let user: HydratedDocument<IUser> | null = null;
+    let party: HydratedDocument<IParty> | null = null;
+
+    console.log(user, party);
 
     const lastMessages = await Message.find({ party: partyId })
       .sort({ _id: -1 })
@@ -46,16 +56,21 @@ const chatRouter = () => {
 
       switch (decodedMessage.type) {
         case 'LOGIN':
-          user = await User.findOne({ token: decodedMessage.payload });
+          const { user: token, party: partyId } = <
+            switchToString<Pick<IMessage, 'user' | 'party'>>
+          >decodedMessage.payload;
+
+          user = await User.findOne({ token });
+          party = await Party.findById(partyId);
 
           activeUsers[id] = user;
           sendActiveUsers();
           break;
         case 'SEND_MESSAGE':
-          if (!user) break;
-
+          if (!user || !party) break;
           const message = await Message.create({
             user: user._id,
+            party: party._id,
             text: decodedMessage.payload,
           });
 
@@ -82,7 +97,7 @@ const chatRouter = () => {
     const sendActiveUsers = () => {
       const usersList = Object.values(activeUsers).map((user) => ({
         id: user?._id,
-        displayName: `${user?.firstname} ${user?.lastname}`,
+        displayName: `${user?.firstname}`,
       }));
 
       broadcast(
