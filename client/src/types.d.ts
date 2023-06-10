@@ -111,7 +111,7 @@ export interface ActiveUser {
 
 export interface ChatMessage {
   _id: string;
-  user: Pick<User, 'firstname' | 'lastname'>;
+  user: Pick<User, 'firstname'>;
   text: string;
 }
 
