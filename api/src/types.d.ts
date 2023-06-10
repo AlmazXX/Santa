@@ -50,5 +50,5 @@ interface IMessage {
 
 interface IncomingMessage {
   type: string;
-  payload: string;
+  payload: string | switchToString<Pick<IMessage, 'user' | 'party'>>;
 }
