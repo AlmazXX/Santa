@@ -37,8 +37,6 @@ const chatRouter = () => {
     let user: HydratedDocument<IUser> | null = null;
     let party: HydratedDocument<IParty> | null = null;
 
-    console.log(user, party);
-
     const lastMessages = await Message.find({ party: partyId })
       .sort({ _id: -1 })
       .limit(30)
@@ -64,7 +62,7 @@ const chatRouter = () => {
           party = await Party.findById(partyId);
 
           activeUsers[id] = user;
-          sendActiveUsers();
+          sendActiveUsers(activeUsers);
           break;
         case 'SEND_MESSAGE':
           if (!user || !party) break;
@@ -86,18 +84,18 @@ const chatRouter = () => {
       }
     });
 
-    ws.on('close', () => {
+    ws.on('close', async () => {
       console.log('client disconnected! id:', id);
-      delete activeConnections[id];
-      delete activeUsers[id];
+      await delete activeConnections[id];
+      await delete activeUsers[id];
 
-      sendActiveUsers();
+      sendActiveUsers(activeUsers);
     });
 
-    const sendActiveUsers = () => {
+    const sendActiveUsers = (activeUsers: ActiveUsers) => {
       const usersList = Object.values(activeUsers).map((user) => ({
         id: user?._id,
-        displayName: `${user?.firstname}`,
+        displayName: user?.firstname,
       }));
 
       broadcast(
