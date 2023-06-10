@@ -1,0 +1,38 @@
+.chatBox {
+  display: flex;
+  gap: 15px;
+}
+
+.usersBox {
+  display: flex;
+  flex: 1 1;
+  border-right: 1px solid rgba(0, 0, 0, 0.23);
+  padding: 15;
+  height: 90vh;
+  border-radius: 4;
+}
+
+.messageBox {
+  display: flex;
+  flex-direction: column;
+  flex: 2 1;
+  justify-content: end;
+  gap: 10px;
+  padding: 15px;
+  height: 90vh;
+  border-radius: 4;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.chatButton {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+}

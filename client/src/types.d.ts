@@ -103,3 +103,19 @@ export interface PageLimit {
 type SearchParam<T> = {
   [P in keyof T]?: string | { $regex?: string; $options?: string };
 } & PageLimit;
+
+export interface ActiveUser {
+  id: string;
+  displayName: string;
+}
+
+export interface ChatMessage {
+  _id: string;
+  user: Pick<User, 'firstname' | 'lastname'>;
+  text: string;
+}
+
+export interface IncomingMessage {
+  type: string;
+  payload: string | ChatMessage | ChatMessage[] | ActiveUser[];
+}

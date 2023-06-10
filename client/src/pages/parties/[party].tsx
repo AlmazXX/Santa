@@ -2,6 +2,8 @@ import Layout from '@/components/UI/Layout/Layout';
 import { getParticipants } from '@/dispatchers/participant/participantsThunk';
 import { selectSingleParty } from '@/dispatchers/party/partiesSlice';
 import { getSingleParty } from '@/dispatchers/party/partiesThunk';
+import Chat from '@/features/Chat/Chat';
+import ChatButton from '@/features/Chat/ChatButton';
 import Participants from '@/features/Participant/Participants';
 import PartyItem from '@/features/Party/components/PartyItem';
 import { useAppSelector } from '@/store/hooks';
@@ -25,6 +27,8 @@ const SingleParty: React.FC = () => {
           <Participants />
         </Grid>
       </Grid>
+      <Chat />
+      <ChatButton />
     </Layout>
   );
 };

@@ -1,3 +1,4 @@
+import { chatReducer } from '@/dispatchers/chat/chatSlice';
 import { participantsReducer } from '@/dispatchers/participant/participantsSlice';
 import { partiesReducer } from '@/dispatchers/party/partiesSlice';
 import { usersReducer } from '@/dispatchers/user/usersSlice';
@@ -12,6 +13,7 @@ const makeStore = () =>
       parties: partiesReducer,
       participants: participantsReducer,
       wishlists: wishlistsReducer,
+      chat: chatReducer,
     },
     devTools: true,
   });
