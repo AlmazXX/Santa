@@ -3,7 +3,7 @@ import { useAppSelector } from '@/store/hooks';
 import { ActiveUser, ChatMessage, IncomingMessage } from '@/types';
 import React from 'react';
 
-const useChat = () => {
+const useChat = (id: string) => {
   const user = useAppSelector(selectUser);
   const [users, setUsers] = React.useState<ActiveUser[]>([]);
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -12,7 +12,7 @@ const useChat = () => {
   const ws = React.useRef<WebSocket | null>(null);
 
   const connectWebSocket = () => {
-    ws.current = new WebSocket('ws://localhost:8000/chat');
+    ws.current = new WebSocket('ws://localhost:8000/chat/' + id);
 
     ws.current.onclose = (e) => {
       console.log(
@@ -25,11 +25,11 @@ const useChat = () => {
     };
 
     ws.current.onopen = () => {
-      if (user) {
-        ws.current?.send(
+      if (user && ws.current) {
+        ws.current.send(
           JSON.stringify({
             type: 'LOGIN',
-            payload: user.token,
+            payload: { user: user.token, party: id },
           }),
         );
       }
@@ -47,6 +47,8 @@ const useChat = () => {
       }
 
       if (decodedMessage.type === 'INITIAL_MESSAGES') {
+        console.log('initial messages received');
+
         setMessages(<ChatMessage[]>decodedMessage.payload);
       }
     };

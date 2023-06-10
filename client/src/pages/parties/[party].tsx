@@ -27,8 +27,12 @@ const SingleParty: React.FC = () => {
           <Participants />
         </Grid>
       </Grid>
-      <Chat />
-      <ChatButton />
+      {party && (
+        <>
+          <Chat party={party._id} />
+          <ChatButton />
+        </>
+      )}
     </Layout>
   );
 };

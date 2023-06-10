@@ -1,4 +1,5 @@
 import { closeChat, selectChatIsOpen } from '@/dispatchers/chat/chatSlice';
+import styles from '@/features/Chat/Chat.module.css';
 import useChat from '@/hooks/useChat';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -12,13 +13,15 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import styles from './Chat.module.css';
 
-const Chat: React.FC = () => {
+interface Props {
+  party: string;
+}
+const Chat: React.FC<Props> = ({ party }) => {
   const dispatch = useAppDispatch();
   const isOpen = useAppSelector(selectChatIsOpen);
   const { users, messages, oneMessage, onMessageChange, sendMessage } =
-    useChat();
+    useChat(party);
 
   const onClose = () => {
     dispatch(closeChat());
@@ -38,11 +41,7 @@ const Chat: React.FC = () => {
           <Box className={styles.messages}>
             {messages.map((message) => (
               <Typography key={message._id}>
-                <strong>
-                  {message.user.firstname}{' '}
-                  {message.user.lastname ? message.user.lastname : null}:
-                </strong>{' '}
-                {message.text}
+                <strong>{message.user.firstname}</strong> {message.text}
               </Typography>
             ))}
           </Box>
