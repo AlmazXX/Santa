@@ -20,7 +20,8 @@ const chatRouter = () => {
   const activeConnections: ActiveConnections = {};
   const activeUsers: ActiveUsers = {};
 
-  router.ws('/', async (ws) => {
+  router.ws('/:id', async (ws, req) => {
+    const partyId = req.params.id;
     const id = randomUUID();
     console.log('client connected! id:', id);
 
@@ -28,14 +29,14 @@ const chatRouter = () => {
 
     let user: HydratedDocument<IUser> | null = null;
 
-    const lastMessages = await Message.find()
+    const lastMessages = await Message.find({ party: partyId })
       .sort({ _id: -1 })
       .limit(30)
-      .populate('user', 'firstname lastname');
+      .populate('user', 'firstname');
 
     ws.send(
       JSON.stringify({
-        type: 'INITIAL MESSAGES',
+        type: 'INITIAL_MESSAGES',
         payload: lastMessages.reverse(),
       }),
     );
@@ -58,10 +59,7 @@ const chatRouter = () => {
             text: decodedMessage.payload,
           });
 
-          const populatedMessage = await message.populate(
-            'user',
-            'firstname lastname',
-          );
+          const populatedMessage = await message.populate('user', 'firstname');
 
           broadcast(
             JSON.stringify({
